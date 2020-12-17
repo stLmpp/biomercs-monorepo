@@ -16,7 +16,12 @@
     "baseUrl": ".",
     "paths": {
       "@biomercs/api-interfaces": ["libs/api-interfaces/src/index.ts"]
-    }
+    },
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "downlevelIteration": true
   },
   "exclude": ["node_modules", "tmp"]
 }

@@ -3,9 +3,17 @@
   "projects": {
     "biomercs": {
       "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "apps/biomercs",
       "sourceRoot": "apps/biomercs/src",
-      "prefix": "biomercs",
+      "prefix": "bio",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -16,10 +24,7 @@
             "polyfills": "apps/biomercs/src/polyfills.ts",
             "tsConfig": "apps/biomercs/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/biomercs/src/favicon.ico",
-              "apps/biomercs/src/assets"
-            ],
+            "assets": ["apps/biomercs/src/favicon.ico", "apps/biomercs/src/assets"],
             "styles": ["apps/biomercs/src/styles.scss"],
             "scripts": []
           },
@@ -74,10 +79,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/biomercs/src/**/*.ts",
-              "apps/biomercs/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/biomercs/src/**/*.ts", "apps/biomercs/src/**/*.html"]
           }
         },
         "test": {
@@ -206,6 +208,11 @@
     },
     "@nrwl/angular:component": {
       "style": "scss"
+    },
+    "@schematics/angular": {
+      "component": {
+        "changeDetection": "OnPush"
+      }
     }
   },
   "defaultProject": "biomercs"
