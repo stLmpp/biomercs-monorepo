@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@biomercs/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+      "@biomercs/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@biomercs/api-validation": ["libs/api-validation/src/index.ts"],
+      "@biomercs/api-dto": ["libs/api-dto/src/index.ts"]
     },
     "forceConsistentCasingInFileNames": true,
     "strict": true,

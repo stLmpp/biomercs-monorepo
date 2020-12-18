@@ -2,8 +2,8 @@ import { BadRequestException, Injectable, NotFoundException, UnauthorizedExcepti
 import { UserRepository } from './user.repository';
 import { UserAddDto, UserGetDto, UserUpdateDto } from './user.dto';
 import { UserEntity } from './user.entity';
-import { AuthCredentialsDto } from '@biomercs/api-interfaces';
 import { FindConditions } from 'typeorm';
+import { AuthCredentialsDto } from '../auth/auth.dto';
 
 @Injectable()
 export class UserService {

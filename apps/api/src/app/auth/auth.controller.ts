@@ -15,13 +15,7 @@ import {
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthRegisterViewModel } from './auth.view-model';
-import {
-  AuthChangePasswordDto,
-  AuthCredentialsDto,
-  AuthRegisterDto,
-  AuthRegisterSteamDto,
-  RouteParam,
-} from '@biomercs/api-interfaces';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { HeaderParams } from '../shared/type/params';
 import { UserEntity } from '../user/user.entity';
 import { ApiAuth } from './api-auth.decorator';
@@ -29,6 +23,7 @@ import { AuthUser } from './auth-user.decorator';
 import { UserService } from '../user/user.service';
 import { SteamService } from '../steam/steam.service';
 import { Request, Response } from 'express';
+import { AuthChangePasswordDto, AuthCredentialsDto, AuthRegisterDto, AuthRegisterSteamDto } from './auth.dto';
 
 @ApiTags('Auth')
 @Controller('auth')

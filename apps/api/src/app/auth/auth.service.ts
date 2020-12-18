@@ -7,13 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import {
-  AuthChangePasswordDto,
-  AuthCredentialsDto,
-  AuthRegisterDto,
-  AuthRegisterSteamDto,
-  AuthSteamLoginSocketErrorType,
-} from '@biomercs/api-interfaces';
+import { AuthSteamLoginSocketErrorType } from '@biomercs/api-interfaces';
 import { UserAddDto } from '../user/user.dto';
 import { genSalt, hash } from 'bcryptjs';
 import { AuthRegisterViewModel } from './auth.view-model';
@@ -28,6 +22,7 @@ import { PlayerService } from '../player/player.service';
 import { AuthGateway } from './auth.gateway';
 import { SteamService } from '../steam/steam.service';
 import { random } from '../util/util';
+import { AuthChangePasswordDto, AuthCredentialsDto, AuthRegisterDto, AuthRegisterSteamDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {

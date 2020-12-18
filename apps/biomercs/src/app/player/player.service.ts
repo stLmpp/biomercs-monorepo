@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Player, PlayerUpdateDto } from '@biomercs/api-interfaces';
+import { Player } from '@biomercs/api-interfaces';
 import { PlayerStore } from './player.store';
 import { tap } from 'rxjs/operators';
+import { PlayerUpdate } from '@biomercs/api-dto';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -27,7 +28,7 @@ export class PlayerService {
     return this.http.get<number>(`${this.endPoint}/user/${idUser}/id`);
   }
 
-  update(idPlayer: number, dto: PlayerUpdateDto): Observable<Player> {
+  update(idPlayer: number, dto: PlayerUpdate): Observable<Player> {
     return this.http.patch<Player>(`${this.endPoint}/${idPlayer}`, dto).pipe(
       tap(player => {
         this.playerStore.upsert(idPlayer, player);

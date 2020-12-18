@@ -1,9 +1,9 @@
 import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PlayerRepository } from './player.repository';
 import { PlayerEntity } from './player.entity';
-import { PlayerAddDto, PlayerUpdateDto } from '@biomercs/api-interfaces';
 import { SteamService } from '../steam/steam.service';
 import { RegionService } from '../region/region.service';
+import { PlayerAddDto, PlayerUpdateDto } from './player.dto';
 
 @Injectable()
 export class PlayerService {

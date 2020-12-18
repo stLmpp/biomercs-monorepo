@@ -4,15 +4,16 @@ import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, finalize, tap } from 'rxjs/operators';
 import { ControlBuilder, Validators } from '@stlmpp/control';
-import { AuthRegisterDto, AuthRegisterVW, User } from '@biomercs/api-interfaces';
+import { AuthRegisterVW, User } from '@biomercs/api-interfaces';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { EmailExistsValidator } from '../../shared/validators/email-exists.validator';
 import { UsernameExistsValidator } from '../../shared/validators/username-exists.validator';
 import { StateComponent } from '../../shared/components/common/state-component';
+import { AuthRegister } from '@biomercs/api-dto';
 
-class AuthRegisterForm extends AuthRegisterDto {
-  confirmPassword!: string;
-  code!: number | null;
+interface AuthRegisterForm extends AuthRegister {
+  confirmPassword: string;
+  code: number | null;
 }
 
 @Component({

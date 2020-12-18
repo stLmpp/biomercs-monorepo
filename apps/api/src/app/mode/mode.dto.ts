@@ -1,5 +1,5 @@
 import { IsDefined, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
-import { IsNumber } from '@biomercs/api-interfaces';
+import { IsNumber } from '@biomercs/api-validation';
 
 export class ModeAddDto {
   @IsDefined()

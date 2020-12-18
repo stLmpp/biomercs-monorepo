@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { PlayerQuery } from '../player.query';
 import { RouterQuery } from '@stlmpp/router';
-import { PlayerUpdateDto, RouteParam } from '@biomercs/api-interfaces';
+import { Player, RouteParam } from '@biomercs/api-interfaces';
 import { debounceTime, filter, map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
-import { Player } from '@biomercs/api-interfaces';
 import { isObjectEmpty } from '@stlmpp/utils';
 import { PlayerService } from '../player.service';
 import { StateComponent } from '../../shared/components/common/state-component';
@@ -13,6 +12,7 @@ import { AuthQuery } from '../../auth/auth.query';
 import { RegionService } from '../../region/region.service';
 import { RegionQuery } from '../../region/region.query';
 import { DynamicLoaderService } from '../../core/dynamic-loader.service';
+import { PlayerUpdate } from '@biomercs/api-dto';
 
 @Component({
   selector: 'bio-profile',
@@ -34,7 +34,7 @@ export class ProfileComponent extends StateComponent<{ editMode: boolean; loadin
     super({ editMode: false, loadingRegion: false });
   }
 
-  private _update$ = new BehaviorSubject<PlayerUpdateDto>({});
+  private _update$ = new BehaviorSubject<PlayerUpdate>({});
   private _idPlayer$ = this.routerQuery.selectParams(RouteParam.idPlayer).pipe(
     filter(idPlayer => !!idPlayer),
     map(Number)
@@ -54,7 +54,7 @@ export class ProfileComponent extends StateComponent<{ editMode: boolean; loadin
     return this.playerQuery.getEntity(this.idPlayer)!;
   }
 
-  private _update(dto: PlayerUpdateDto): void {
+  private _update(dto: PlayerUpdate): void {
     this.playerService.update(this.idPlayer, dto).subscribe();
   }
 
@@ -62,7 +62,7 @@ export class ProfileComponent extends StateComponent<{ editMode: boolean; loadin
     this.updateState('editMode', !this.getState('editMode'));
   }
 
-  update<K extends keyof PlayerUpdateDto>(key: K, value: PlayerUpdateDto[K]): void {
+  update<K extends keyof PlayerUpdate>(key: K, value: PlayerUpdate[K]): void {
     this._update$.next({ ...this._update$.value, [key]: value });
   }
 

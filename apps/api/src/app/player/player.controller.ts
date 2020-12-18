@@ -3,7 +3,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiAuth } from '../auth/api-auth.decorator';
 import { PlayerService } from './player.service';
 import { PlayerEntity } from './player.entity';
-import { PlayerUpdateDto, RouteParam } from '@biomercs/api-interfaces';
+import { RouteParam } from '@biomercs/api-interfaces';
+import { PlayerUpdateDto } from './player.dto';
 
 @ApiAuth()
 @ApiTags('Player')

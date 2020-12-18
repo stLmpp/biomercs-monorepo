@@ -214,6 +214,48 @@
           }
         }
       }
+    },
+    "api-validation": {
+      "root": "libs/api-validation",
+      "sourceRoot": "libs/api-validation/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api-validation/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/api-validation"],
+          "options": {
+            "jestConfig": "libs/api-validation/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-dto": {
+      "root": "libs/api-dto",
+      "sourceRoot": "libs/api-dto/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api-dto/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/api-dto"],
+          "options": {
+            "jestConfig": "libs/api-dto/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

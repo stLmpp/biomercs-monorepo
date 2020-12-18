@@ -9,9 +9,10 @@ import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
 import { ModalService } from '../../shared/components/modal/modal.service';
 import type { LoginConfirmCodeModalComponent } from './login-confirm-code-modal/login-confirm-code-modal.component';
-import { AuthCredentialsDto, HttpStatusCode } from '@biomercs/api-interfaces';
+import { HttpStatusCode } from '@biomercs/api-interfaces';
 import { HttpError } from '../../model/http-error';
 import { StateComponent } from '../../shared/components/common/state-component';
+import { AuthCredentials } from '@biomercs/api-dto';
 
 @Component({
   selector: 'bio-login',
@@ -38,7 +39,7 @@ export class LoginComponent
   typePassword = 'password';
   error$ = this.selectState('error');
 
-  form = new ControlGroup<AuthCredentialsDto>({
+  form = new ControlGroup<AuthCredentials>({
     rememberMe: new Control(true),
     password: new Control('', [Validators.required]),
     username: new Control('', [Validators.required]),

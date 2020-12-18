@@ -1,5 +1,5 @@
-import { IsDate, IsNumber } from '@biomercs/api-interfaces';
 import { IsDefined } from 'class-validator';
+import { IsDate, IsNumber } from '@biomercs/api-validation';
 
 export class AuthConfirmationAddDto {
   @IsDefined()

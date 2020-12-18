@@ -35,6 +35,12 @@
     },
     "api-interfaces": {
       "tags": []
+    },
+    "api-validation": {
+      "tags": []
+    },
+    "api-dto": {
+      "tags": []
     }
   }
 }

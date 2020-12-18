@@ -13,14 +13,13 @@ import { SnackBarService } from '../shared/components/snack-bar/snack-bar.servic
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { v4 } from 'uuid';
 import {
-  AuthCredentialsDto,
-  AuthRegisterDto,
   AuthRegisterVW,
   AuthSteamLoginSocketErrorType,
   AuthSteamLoginSocketEvent,
   AuthSteamLoginSocketVW,
   User,
 } from '@biomercs/api-interfaces';
+import { AuthCredentials, AuthRegister } from '@biomercs/api-dto';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -46,13 +45,13 @@ export class AuthService {
     } as any) as any;
   }
 
-  register(dto: AuthRegisterDto): Observable<AuthRegisterVW> {
+  register(dto: AuthRegister): Observable<AuthRegisterVW> {
     return this.http.post<AuthRegisterVW>(`${this.endPoint}/register`, dto, {
       headers: AuthErrorInterceptor.ignoreHeaders,
     });
   }
 
-  login(dto: AuthCredentialsDto): Observable<User> {
+  login(dto: AuthCredentials): Observable<User> {
     return this.http
       .post<User>(`${this.endPoint}/login`, dto, { headers: AuthErrorInterceptor.ignoreHeaders })
       .pipe(

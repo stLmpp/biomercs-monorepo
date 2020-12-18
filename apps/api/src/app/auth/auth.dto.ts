@@ -1,7 +1,8 @@
 import { IsBoolean, IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
-import { IsNumber } from '../validation';
+import { IsNumber } from '@biomercs/api-validation';
+import { AuthChangePassword, AuthCredentials, AuthRegister, AuthRegisterSteam } from '@biomercs/api-dto';
 
-export class AuthRegisterDto {
+export class AuthRegisterDto implements AuthRegister {
   @IsString()
   @IsDefined()
   @MinLength(3)
@@ -18,7 +19,7 @@ export class AuthRegisterDto {
   email!: string;
 }
 
-export class AuthCredentialsDto {
+export class AuthCredentialsDto implements AuthCredentials {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
@@ -34,7 +35,7 @@ export class AuthCredentialsDto {
   rememberMe?: boolean;
 }
 
-export class AuthChangePasswordDto {
+export class AuthChangePasswordDto implements AuthChangePassword {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
@@ -45,7 +46,7 @@ export class AuthChangePasswordDto {
   confirmationCode!: number;
 }
 
-export class AuthRegisterSteamDto {
+export class AuthRegisterSteamDto implements AuthRegisterSteam {
   @IsString()
   @IsDefined()
   @IsNotEmpty()

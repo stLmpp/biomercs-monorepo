@@ -1,7 +1,8 @@
 import { IsDefined, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
-import { IsNumber } from '../validation';
+import { IsNumber } from '@biomercs/api-validation';
+import { PlayerAdd, PlayerUpdate } from '@biomercs/api-dto';
 
-export class PlayerAddDto {
+export class PlayerAddDto implements PlayerAdd {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
@@ -29,7 +30,7 @@ export class PlayerAddDto {
   idRegion?: number;
 }
 
-export class PlayerUpdateDto {
+export class PlayerUpdateDto implements PlayerUpdate {
   @IsString()
   @IsOptional()
   @IsNotEmpty()

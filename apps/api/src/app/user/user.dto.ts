@@ -1,5 +1,5 @@
 import { IsBoolean, IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { IsArrayNumber, IsDate, IsNumber } from '@biomercs/api-interfaces';
+import { IsArrayNumber, IsDate, IsNumber } from '@biomercs/api-validation';
 
 export class UserAddDto {
   constructor(partial?: Partial<UserAddDto>) {
