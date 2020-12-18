@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Region } from './region.entity';
+import { RegionEntity } from './region.entity';
 
-@EntityRepository(Region)
-export class RegionRepository extends Repository<Region> {}
+@EntityRepository(RegionEntity)
+export class RegionRepository extends Repository<RegionEntity> {}

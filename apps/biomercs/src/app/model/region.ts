@@ -1,9 +1,4 @@
-import { BaseModel } from './base-model';
 import { trackByFactory } from '@stlmpp/utils';
-
-export interface Region extends BaseModel {
-  name: string;
-  shortName: string;
-}
+import { Region } from '@biomercs/api-interfaces';
 
 export const trackByRegion = trackByFactory<Region>('id');

@@ -4,8 +4,5 @@ import { isNil } from '@stlmpp/utils';
 import { IsNumber as _IsNumber } from 'class-validator';
 
 export function IsNumber(): PropertyDecorator {
-  return applyDecorators(
-    Transform(id => (!isNil(id) ? +id : id)),
-    _IsNumber()
-  );
+  return applyDecorators(Transform(id => (!isNil(id) ? +id : id)) as any, _IsNumber());
 }

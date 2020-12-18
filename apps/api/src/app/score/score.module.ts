@@ -10,9 +10,9 @@ import { PlatformGameMiniGameModeStageModule } from '../platform/platform-game-m
 import { ModeModule } from '../mode/mode.module';
 import { MapperModule } from '../mapper/mapper.module';
 import { MapperService } from '../mapper/mapper.service';
-import { Score } from './score.entity';
+import { ScoreEntity } from './score.entity';
 import { ScorePlayerViewModel, ScoreViewModel } from './view-model/score.view-model';
-import { ScorePlayer } from './score-player/score-player.entity';
+import { ScorePlayerEntity } from './score-player/score-player.entity';
 import { PlatformGameMiniGameModeCharacterCostumeModule } from '../platform/platform-game-mini-game-mode-character-costume/platform-game-mini-game-mode-character-costume.module';
 import { PlayerModule } from '../player/player.module';
 import { StageModule } from '../stage/stage.module';
@@ -37,7 +37,7 @@ import { StageModule } from '../stage/stage.module';
 export class ScoreModule {
   constructor(private mapperService: MapperService) {
     this.mapperService
-      .create(ScorePlayer, ScorePlayerViewModel)
+      .create(ScorePlayerEntity, ScorePlayerViewModel)
       .for(
         dest => dest.playerPersonaName,
         from => from.player.personaName
@@ -64,7 +64,7 @@ export class ScoreModule {
       );
 
     this.mapperService
-      .create(Score, ScoreViewModel)
+      .create(ScoreEntity, ScoreViewModel)
       .for(
         dest => dest.idScore,
         from => from.id
@@ -137,7 +137,7 @@ export class ScoreModule {
       )
       .for(
         dest => dest.scorePlayers,
-        from => this.mapperService.map(ScorePlayer, ScorePlayerViewModel, from.scorePlayers)
+        from => this.mapperService.map(ScorePlayerEntity, ScorePlayerViewModel, from.scorePlayers)
       );
   }
 }

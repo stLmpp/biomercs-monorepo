@@ -1,6 +1,8 @@
-import { BaseModel } from './base-model';
+import { Base } from './base';
 
-export interface SteamProfile extends BaseModel {
+export interface SteamProfile extends Base, RawSteamProfile {}
+
+export interface RawSteamProfile {
   steamid: string;
   communityvisibilitystate: number;
   profilestate: number;

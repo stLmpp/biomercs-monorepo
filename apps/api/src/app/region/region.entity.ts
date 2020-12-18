@@ -1,8 +1,9 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from '../shared/super/base-entity';
+import { Region } from '@biomercs/api-interfaces';
 
 @Entity()
-export class Region extends BaseEntity {
+export class RegionEntity extends BaseEntity implements Region {
   @Column()
   name!: string;
 

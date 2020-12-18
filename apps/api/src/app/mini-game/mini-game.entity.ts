@@ -1,11 +1,12 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../shared/super/base-entity';
-import { GameMiniGame } from '../game/game-mini-game/game-mini-game.entity';
+import { GameMiniGameEntity } from '../game/game-mini-game/game-mini-game.entity';
+import { MiniGame } from '@biomercs/api-interfaces';
 
 @Entity()
-export class MiniGame extends BaseEntity {
+export class MiniGameEntity extends BaseEntity implements MiniGame {
   @Column() name!: string;
 
-  @OneToMany(() => GameMiniGame, gameMiniGame => gameMiniGame.miniGame)
-  gameMiniGames!: GameMiniGame[];
+  @OneToMany(() => GameMiniGameEntity, gameMiniGame => gameMiniGame.miniGame)
+  gameMiniGames!: GameMiniGameEntity[];
 }

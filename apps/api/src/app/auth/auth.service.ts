@@ -7,13 +7,19 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { AuthChangePasswordDto, AuthCredentialsDto, AuthRegisterDto, AuthRegisterSteamDto } from './auth.dto';
+import {
+  AuthChangePasswordDto,
+  AuthCredentialsDto,
+  AuthRegisterDto,
+  AuthRegisterSteamDto,
+  AuthSteamLoginSocketErrorType,
+} from '@biomercs/api-interfaces';
 import { UserAddDto } from '../user/user.dto';
 import { genSalt, hash } from 'bcryptjs';
-import { AuthRegisterViewModel, AuthSteamLoginSocketErrorType } from './auth.view-model';
+import { AuthRegisterViewModel } from './auth.view-model';
 import { isNumber } from '@stlmpp/utils';
 import { AuthConfirmationService } from './auth-confirmation/auth-confirmation.service';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 import { environment } from '../environment/environment';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
@@ -35,7 +41,7 @@ export class AuthService {
     private steamService: SteamService
   ) {}
 
-  private async _sendConfirmationCodeEmail({ email, id }: User): Promise<void> {
+  private async _sendConfirmationCodeEmail({ email, id }: UserEntity): Promise<void> {
     const code = await this._generateConfirmationCode(id);
     await this.mailerService.sendMail({
       to: email,
@@ -54,7 +60,7 @@ export class AuthService {
     return this.authConfirmationService.generateConfirmationCode(idUser);
   }
 
-  private async _registerUser({ username, password, email }: AuthRegisterDto): Promise<User> {
+  private async _registerUser({ username, password, email }: AuthRegisterDto): Promise<UserEntity> {
     let user = await this.userService.getByEmailOrUsername(username, email);
     if (user) {
       throw new ConflictException('User or e-mail already registered');
@@ -82,7 +88,7 @@ export class AuthService {
   }
 
   @Transactional()
-  async resendConfirmationCode(userOrIdUser: number | User): Promise<void> {
+  async resendConfirmationCode(userOrIdUser: number | UserEntity): Promise<void> {
     const user = isNumber(userOrIdUser) ? await this.userService.getById(userOrIdUser) : userOrIdUser;
     if (!user) {
       throw new NotFoundException('User not found');
@@ -92,7 +98,7 @@ export class AuthService {
   }
 
   @Transactional()
-  async confirmCode(idUser: number, code: number): Promise<User> {
+  async confirmCode(idUser: number, code: number): Promise<UserEntity> {
     const user = await this.userService.getById(idUser);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -108,7 +114,7 @@ export class AuthService {
   }
 
   @Transactional()
-  async changeForgottenPassword(dto: AuthChangePasswordDto): Promise<User> {
+  async changeForgottenPassword(dto: AuthChangePasswordDto): Promise<UserEntity> {
     let user = await this.userService.findByAuthCode(dto.confirmationCode);
     if (!user) {
       throw new BadRequestException('Confirmation code does not exists');
@@ -154,7 +160,7 @@ export class AuthService {
       return;
     }
     const { salt, password } = await this.userService.getPasswordAndSalt(user.id);
-    user.token = await this.getToken(new User().extendDto({ ...user, password, salt }));
+    user.token = await this.getToken(new UserEntity().extendDto({ ...user, password, salt }));
     user.lastOnline = new Date();
     user.rememberMe = true;
     await this.userService.update(user.id, { lastOnline: user.lastOnline, rememberMe: user.rememberMe });
@@ -179,7 +185,7 @@ export class AuthService {
    * @description Not transactional because the e-mail must be sent.
    * Also there's no need for this method to be transactional, since there's only one update that matters
    */
-  async login(dto: AuthCredentialsDto): Promise<User> {
+  async login(dto: AuthCredentialsDto): Promise<UserEntity> {
     const user = await this.userService.validateUserToLogin(dto);
     const hasConfirmationPending = await this.authConfirmationService.hasConfirmationPending(user.id);
     if (hasConfirmationPending) {
@@ -193,7 +199,7 @@ export class AuthService {
     return user.removePasswordAndSalt();
   }
 
-  async getToken({ id, password, rememberMe }: User): Promise<string> {
+  async getToken({ id, password, rememberMe }: UserEntity): Promise<string> {
     const options: JwtSignOptions = {};
     if (rememberMe) {
       options.expiresIn = '180 days';

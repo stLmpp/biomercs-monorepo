@@ -1,15 +1,16 @@
 import { BadRequestException, forwardRef, HttpService, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { RawSteamProfile, SteamProfile } from './steam-profile.entity';
+import { SteamProfileEntity } from './steam-profile.entity';
 import { map } from 'rxjs/operators';
 import { Request } from 'express';
 import { SteamProfileRepository } from './steam-profile.repository';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { environment } from '../environment/environment';
 import { RelyingParty } from 'openid';
 import { isString } from '@stlmpp/utils';
 import { PlayerService } from '../player/player.service';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
-import { Player } from '../player/player.entity';
+import { PlayerEntity } from '../player/player.entity';
+import { RawSteamProfile } from '@biomercs/api-interfaces';
 
 @Injectable()
 export class SteamService {
@@ -19,7 +20,11 @@ export class SteamService {
     @Inject(forwardRef(() => PlayerService)) private playerService: PlayerService
   ) {}
 
-  private async _createOrReplaceSteamProfile(req: Request, player?: Player, returnUrl?: string): Promise<SteamProfile> {
+  private async _createOrReplaceSteamProfile(
+    req: Request,
+    player?: PlayerEntity,
+    returnUrl?: string
+  ): Promise<SteamProfileEntity> {
     if (!player) {
       throw new NotFoundException('Player not found');
     }
@@ -49,17 +54,17 @@ export class SteamService {
   }
 
   @Transactional()
-  async authenticateAndLinkUser(req: Request, idUser: number, returnUrl?: string): Promise<SteamProfile> {
+  async authenticateAndLinkUser(req: Request, idUser: number, returnUrl?: string): Promise<SteamProfileEntity> {
     return this._createOrReplaceSteamProfile(req, await this.playerService.findByIdUser(idUser), returnUrl);
   }
 
   @Transactional()
-  async authenticateAndLinkPlayer(req: Request, idPlayer: number, returnUrl?: string): Promise<SteamProfile> {
+  async authenticateAndLinkPlayer(req: Request, idPlayer: number, returnUrl?: string): Promise<SteamProfileEntity> {
     return this._createOrReplaceSteamProfile(req, await this.playerService.findById(idPlayer), returnUrl);
   }
 
   @Transactional()
-  async create(steamid: string): Promise<SteamProfile> {
+  async create(steamid: string): Promise<SteamProfileEntity> {
     const rawSteamProfile = await this.getPlayerSummary(steamid);
     if (!rawSteamProfile) {
       throw new NotFoundException('Steam profile not found');
@@ -73,7 +78,7 @@ export class SteamService {
     return steamProfile;
   }
 
-  async updateSteamProfile(idSteamProfile: number): Promise<SteamProfile> {
+  async updateSteamProfile(idSteamProfile: number): Promise<SteamProfileEntity> {
     const steamProfile = await this.steamProfileRepository.findOne(idSteamProfile);
     if (!steamProfile?.steamid) {
       throw new BadRequestException('Steam Profile does not exist');
@@ -84,7 +89,7 @@ export class SteamService {
 
   async getPlayerSummary(steamid: string): Promise<RawSteamProfile> {
     return this.http
-      .get<{ response: { players: SteamProfile[] } }>(
+      .get<{ response: { players: SteamProfileEntity[] } }>(
         `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002`,
         {
           params: {
@@ -105,16 +110,16 @@ export class SteamService {
   }
 
   async openIdUrl(returnUrl: string): Promise<string>;
-  async openIdUrl(user: User): Promise<string>;
-  async openIdUrl(player: Player): Promise<string>;
+  async openIdUrl(user: UserEntity): Promise<string>;
+  async openIdUrl(player: PlayerEntity): Promise<string>;
   async openIdUrl(): Promise<string>;
-  async openIdUrl(urlOrUser?: string | User | Player): Promise<string> {
+  async openIdUrl(urlOrUser?: string | UserEntity | PlayerEntity): Promise<string> {
     let url = '/steam/auth';
     if (urlOrUser) {
       if (isString(urlOrUser)) {
         url = urlOrUser;
       } else {
-        const idType = urlOrUser instanceof User ? 'idUser' : 'idPlayer';
+        const idType = urlOrUser instanceof UserEntity ? 'idUser' : 'idPlayer';
         url = `${url}?${idType}=${urlOrUser.id}`;
       }
     }
@@ -150,11 +155,11 @@ export class SteamService {
     });
   }
 
-  async add(dto: RawSteamProfile): Promise<SteamProfile> {
-    return this.steamProfileRepository.save(new SteamProfile().extendDto(dto));
+  async add(dto: RawSteamProfile): Promise<SteamProfileEntity> {
+    return this.steamProfileRepository.save(new SteamProfileEntity().extendDto(dto));
   }
 
-  async checkIfSteamProfileIsAlreadyLinked(steamid: string): Promise<SteamProfile | undefined> {
+  async checkIfSteamProfileIsAlreadyLinked(steamid: string): Promise<SteamProfileEntity | undefined> {
     const steamProfile = await this.steamProfileRepository.findOne({ where: { steamid } });
     if (!steamProfile) {
       return;
@@ -166,7 +171,7 @@ export class SteamService {
     throw new BadRequestException('Steam profile already registered and linked with one player');
   }
 
-  async findBySteamid(steamid: string): Promise<SteamProfile> {
+  async findBySteamid(steamid: string): Promise<SteamProfileEntity> {
     return this.steamProfileRepository.findOneOrFail({ where: { steamid } });
   }
 }

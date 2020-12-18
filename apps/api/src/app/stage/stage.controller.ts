@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StageService } from './stage.service';
-import { Stage } from './stage.entity';
+import { StageEntity } from './stage.entity';
 import { StageAddDto, StageUpdateDto } from './stage.dto';
-import { Params } from '../shared/type/params';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { ApiAdmin } from '../auth/api-admin.decorator';
 import { ApiAuth } from '../auth/api-auth.decorator';
 
@@ -15,28 +15,30 @@ export class StageController {
 
   @ApiAdmin()
   @Post()
-  async add(@Body() dto: StageAddDto): Promise<Stage> {
+  async add(@Body() dto: StageAddDto): Promise<StageEntity> {
     return this.stageService.add(dto);
   }
 
   @ApiAdmin()
-  @Patch(`:${Params.idStage}`)
-  async update(@Param(Params.idStage) idStage: number, @Body() dto: StageUpdateDto): Promise<Stage> {
+  @Patch(`:${RouteParam.idStage}`)
+  async update(@Param(RouteParam.idStage) idStage: number, @Body() dto: StageUpdateDto): Promise<StageEntity> {
     return this.stageService.update(idStage, dto);
   }
 
-  @Get(`platform/:${Params.idPlatform}/game/:${Params.idGame}/mini-game/:${Params.idMiniGame}/mode/:${Params.idMode}`)
+  @Get(
+    `platform/:${RouteParam.idPlatform}/game/:${RouteParam.idGame}/mini-game/:${RouteParam.idMiniGame}/mode/:${RouteParam.idMode}`
+  )
   async findByIdPlatformGameMiniGameMode(
-    @Param(Params.idPlatform) idPlatform: number,
-    @Param(Params.idGame) idGame: number,
-    @Param(Params.idMiniGame) idMiniGame: number,
-    @Param(Params.idMode) idMode: number
-  ): Promise<Stage[]> {
+    @Param(RouteParam.idPlatform) idPlatform: number,
+    @Param(RouteParam.idGame) idGame: number,
+    @Param(RouteParam.idMiniGame) idMiniGame: number,
+    @Param(RouteParam.idMode) idMode: number
+  ): Promise<StageEntity[]> {
     return this.stageService.findByIdPlatformGameMiniGameMode(idPlatform, idGame, idMiniGame, idMode);
   }
 
-  @Get(`:${Params.idStage}`)
-  async findById(@Param(Params.idStage) idStage: number): Promise<Stage> {
+  @Get(`:${RouteParam.idStage}`)
+  async findById(@Param(RouteParam.idStage) idStage: number): Promise<StageEntity> {
     return this.stageService.findById(idStage);
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PlatformGameMiniGameModeStageRepository } from './platform-game-mini-game-mode-stage.repository';
 import { PlatformGameMiniGameModeService } from '../platform-game-mini-game-mode/platform-game-mini-game-mode.service';
-import { PlatformGameMiniGameModeStage } from './platform-game-mini-game-mode-stage.entity';
+import { PlatformGameMiniGameModeStageEntity } from './platform-game-mini-game-mode-stage.entity';
 
 @Injectable()
 export class PlatformGameMiniGameModeStageService {
@@ -16,7 +16,7 @@ export class PlatformGameMiniGameModeStageService {
     idMiniGame: number,
     idMode: number,
     idStage: number
-  ): Promise<PlatformGameMiniGameModeStage> {
+  ): Promise<PlatformGameMiniGameModeStageEntity> {
     const idPlatformGameMiniGameMode = await this.platformGameMiniGameModeService.findIdByPlaformGameMiniGameMode(
       idPlatform,
       idGame,
@@ -24,7 +24,7 @@ export class PlatformGameMiniGameModeStageService {
       idMode
     );
     return this.platformGameMiniGameModeStageRepository.save(
-      new PlatformGameMiniGameModeStage().extendDto({ idPlatformGameMiniGameMode, idStage })
+      new PlatformGameMiniGameModeStageEntity().extendDto({ idPlatformGameMiniGameMode, idStage })
     );
   }
 
@@ -61,7 +61,7 @@ export class PlatformGameMiniGameModeStageService {
     idMiniGame: number,
     idMode: number,
     idStage: number
-  ): Promise<PlatformGameMiniGameModeStage> {
+  ): Promise<PlatformGameMiniGameModeStageEntity> {
     return this.platformGameMiniGameModeStageRepository.findByPlatformGameMiniGameModeStage(
       idPlatform,
       idGame,
@@ -76,7 +76,7 @@ export class PlatformGameMiniGameModeStageService {
     idGame: number,
     idMiniGame: number,
     idMode: number
-  ): Promise<PlatformGameMiniGameModeStage[]> {
+  ): Promise<PlatformGameMiniGameModeStageEntity[]> {
     return this.platformGameMiniGameModeStageRepository.findByPlatformGameMiniGameMode(
       idPlatform,
       idGame,
@@ -95,7 +95,7 @@ export class PlatformGameMiniGameModeStageService {
     game?: string;
     miniGame?: string;
     mode?: string;
-  } = {}): Promise<PlatformGameMiniGameModeStage> {
+  } = {}): Promise<PlatformGameMiniGameModeStageEntity> {
     const qb = this.platformGameMiniGameModeStageRepository
       .createQueryBuilder('pgmms')
       .innerJoinAndSelect('pgmms.platformGameMiniGameMode', 'pgmm')

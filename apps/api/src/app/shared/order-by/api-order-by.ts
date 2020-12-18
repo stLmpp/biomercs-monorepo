@@ -1,14 +1,14 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { Params } from '../type/params';
+import { RouteParam } from '@biomercs/api-interfaces';
 
 export function ApiOrderBy(required = false): any {
-  return applyDecorators(ApiQuery({ name: Params.orderBy, description: 'Ordernar por', required, type: String }));
+  return applyDecorators(ApiQuery({ name: RouteParam.orderBy, description: 'Ordernar por', required, type: String }));
 }
 
 export function ApiOrderByDirection(required = false): any {
   return applyDecorators(
-    ApiQuery({ name: Params.orderByDirection, description: 'Ordenação', required, enum: ['ASC', 'DESC'] })
+    ApiQuery({ name: RouteParam.orderByDirection, description: 'Ordenação', required, enum: ['ASC', 'DESC'] })
   );
 }
 

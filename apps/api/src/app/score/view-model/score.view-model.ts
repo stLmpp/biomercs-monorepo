@@ -1,7 +1,7 @@
-import { ScoreStatusEnum } from '../score-status.enum';
 import { Property } from '../../mapper/mapper.service';
+import { ScorePlayerVW, ScoreStatusEnum, ScoreVW } from '@biomercs/api-interfaces';
 
-export class ScorePlayerViewModel {
+export class ScorePlayerViewModel implements ScorePlayerVW {
   @Property() idScore!: number;
   @Property() idPlayer!: number;
   @Property() playerPersonaName!: string;
@@ -17,7 +17,7 @@ export class ScorePlayerViewModel {
   @Property() evidence!: string;
 }
 
-export class ScoreViewModel {
+export class ScoreViewModel implements ScoreVW {
   @Property() idPlatformGameMiniGameModeStage!: number;
   @Property() idPlatformGameMiniGameMode!: number;
   @Property() idPlatformGameMiniGame!: number;

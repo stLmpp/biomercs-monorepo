@@ -1,9 +1,9 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Game } from './game.entity';
+import { GameEntity } from './game.entity';
 
-@EntityRepository(Game)
-export class GameRepository extends Repository<Game> {
-  async findByIdPlatform(idPlatform: number): Promise<Game[]> {
+@EntityRepository(GameEntity)
+export class GameRepository extends Repository<GameEntity> {
+  async findByIdPlatform(idPlatform: number): Promise<GameEntity[]> {
     return this.createQueryBuilder('g')
       .innerJoin('g.gameMiniGames', 'gm')
       .innerJoin('gm.platformGameMiniGames', 'gmg')

@@ -1,15 +1,12 @@
-export class AuthRegisterViewModel {
+import { AuthRegisterVW, AuthSteamLoginSocketErrorType, AuthSteamLoginSocketVW } from '@biomercs/api-interfaces';
+
+export class AuthRegisterViewModel implements AuthRegisterVW {
   email!: string;
   message!: string;
   idUser!: number;
 }
 
-export enum AuthSteamLoginSocketErrorType {
-  userNotFound,
-  userNotConfirmed,
-}
-
-export class AuthSteamLoginSocketViewModel {
+export class AuthSteamLoginSocketViewModel implements AuthSteamLoginSocketVW {
   uuid!: string;
   token!: string;
   error?: string;

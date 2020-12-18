@@ -2,11 +2,12 @@ import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 import { BaseEntity } from '../shared/super/base-entity';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { hash } from 'bcryptjs';
-import { Player } from '../player/player.entity';
-import { AuthConfirmation } from '../auth/auth-confirmation/auth-confirmation.entity';
+import { PlayerEntity } from '../player/player.entity';
+import { AuthConfirmationEntity } from '../auth/auth-confirmation/auth-confirmation.entity';
+import { User } from '@biomercs/api-interfaces';
 
 @Entity()
-export class User extends BaseEntity {
+export class UserEntity extends BaseEntity implements User {
   @Column({ unique: true })
   username!: string;
 
@@ -30,11 +31,11 @@ export class User extends BaseEntity {
   @Column({ default: false })
   admin!: boolean;
 
-  @OneToOne(() => Player, player => player.user)
-  player!: Player;
+  @OneToOne(() => PlayerEntity, player => player.user)
+  player!: PlayerEntity;
 
-  @OneToMany(() => AuthConfirmation, authConfirmation => authConfirmation.user)
-  authConfirmations!: AuthConfirmation[];
+  @OneToMany(() => AuthConfirmationEntity, authConfirmation => authConfirmation.user)
+  authConfirmations!: AuthConfirmationEntity[];
 
   token?: string;
 

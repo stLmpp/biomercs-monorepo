@@ -6,8 +6,8 @@ import { debounceTime, finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
-import { User } from '../../model/user';
 import { StateComponent } from '../../shared/components/common/state-component';
+import { User } from '@biomercs/api-interfaces';
 
 interface ForgotPasswordForm {
   email: string;

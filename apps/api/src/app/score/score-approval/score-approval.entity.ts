@@ -1,19 +1,19 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../shared/super/base-entity';
-import { Score } from '../score.entity';
-import { Player } from '../../player/player.entity';
-import { User } from '../../user/user.entity';
+import { ScoreEntity } from '../score.entity';
+import { PlayerEntity } from '../../player/player.entity';
+import { UserEntity } from '../../user/user.entity';
 import { ScoreApprovalActionEnum } from './score-approval-action.enum';
-import { ScoreApprovalMotive } from '../score-approval-motive/score-approval-motive.entity';
+import { ScoreApprovalMotiveEntity } from '../score-approval-motive/score-approval-motive.entity';
 
 @Entity()
-export class ScoreApproval extends BaseEntity {
+export class ScoreApprovalEntity extends BaseEntity {
   @Column()
   idScore!: number;
 
-  @ManyToOne(() => Score)
+  @ManyToOne(() => ScoreEntity)
   @JoinColumn()
-  score!: Score;
+  score!: ScoreEntity;
 
   @Column()
   actionDate!: Date;
@@ -21,16 +21,16 @@ export class ScoreApproval extends BaseEntity {
   @Column({ nullable: true })
   actionByPlayer?: number;
 
-  @ManyToOne(() => Player, { nullable: true })
+  @ManyToOne(() => PlayerEntity, { nullable: true })
   @JoinColumn({ name: 'actionByPlayer', referencedColumnName: 'id' })
-  player?: Player;
+  player?: PlayerEntity;
 
   @Column({ nullable: true })
   actionByAdmin?: number;
 
-  @ManyToOne(() => User, { nullable: true })
+  @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'actionByAdmin', referencedColumnName: 'id' })
-  admin?: User;
+  admin?: UserEntity;
 
   @Column()
   @Column({ nullable: true, length: 1000 })
@@ -42,7 +42,7 @@ export class ScoreApproval extends BaseEntity {
   @Column()
   idScoreApprovalMotive!: number;
 
-  @ManyToOne(() => ScoreApprovalMotive)
+  @ManyToOne(() => ScoreApprovalMotiveEntity)
   @JoinColumn()
-  scoreApprovalMotive!: ScoreApprovalMotive;
+  scoreApprovalMotive!: ScoreApprovalMotiveEntity;
 }

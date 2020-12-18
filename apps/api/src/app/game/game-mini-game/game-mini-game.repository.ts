@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { GameMiniGame } from './game-mini-game.entity';
+import { GameMiniGameEntity } from './game-mini-game.entity';
 
-@EntityRepository(GameMiniGame)
-export class GameMiniGameRepository extends Repository<GameMiniGame> {}
+@EntityRepository(GameMiniGameEntity)
+export class GameMiniGameRepository extends Repository<GameMiniGameEntity> {}

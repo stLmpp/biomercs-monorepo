@@ -2,9 +2,8 @@ import { Body, Controller, Get, Param, Patch, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiAuth } from '../auth/api-auth.decorator';
 import { PlayerService } from './player.service';
-import { Player } from './player.entity';
-import { Params } from '../shared/type/params';
-import { PlayerUpdateDto } from './player.dto';
+import { PlayerEntity } from './player.entity';
+import { PlayerUpdateDto, RouteParam } from '@biomercs/api-interfaces';
 
 @ApiAuth()
 @ApiTags('Player')
@@ -12,33 +11,33 @@ import { PlayerUpdateDto } from './player.dto';
 export class PlayerController {
   constructor(private playerService: PlayerService) {}
 
-  @Put(`:${Params.idPlayer}/link-steam`)
-  async linkSteamProfile(@Param(Params.idPlayer) idPlayer: number): Promise<string> {
+  @Put(`:${RouteParam.idPlayer}/link-steam`)
+  async linkSteamProfile(@Param(RouteParam.idPlayer) idPlayer: number): Promise<string> {
     return this.playerService.linkSteamProfile(idPlayer);
   }
 
-  @Put(`:${Params.idPlayer}/unlink-steam`)
-  async unlinkSteamProfile(@Param(Params.idPlayer) idPlayer: number): Promise<Player> {
+  @Put(`:${RouteParam.idPlayer}/unlink-steam`)
+  async unlinkSteamProfile(@Param(RouteParam.idPlayer) idPlayer: number): Promise<PlayerEntity> {
     return this.playerService.unlinkSteamProfile(idPlayer);
   }
 
-  @Get(`persona-name/:${Params.personaName}/id`)
-  async findIdByPersonaName(@Param(Params.personaName) personaName: string): Promise<number> {
+  @Get(`persona-name/:${RouteParam.personaName}/id`)
+  async findIdByPersonaName(@Param(RouteParam.personaName) personaName: string): Promise<number> {
     return this.playerService.findIdByPersonaName(personaName);
   }
 
-  @Get(`user/:${Params.idUser}/id`)
-  async findIdByIdUser(@Param(Params.idUser) idUser: number): Promise<number> {
+  @Get(`user/:${RouteParam.idUser}/id`)
+  async findIdByIdUser(@Param(RouteParam.idUser) idUser: number): Promise<number> {
     return this.playerService.findIdByIdUser(idUser);
   }
 
-  @Get(`:${Params.idPlayer}`)
-  async findById(@Param(Params.idPlayer) idPlayer: number): Promise<Player> {
+  @Get(`:${RouteParam.idPlayer}`)
+  async findById(@Param(RouteParam.idPlayer) idPlayer: number): Promise<PlayerEntity> {
     return this.playerService.findById(idPlayer);
   }
 
-  @Patch(`:${Params.idPlayer}`)
-  async update(@Param(Params.idPlayer) idPlayer: number, @Body() dto: PlayerUpdateDto): Promise<Player> {
+  @Patch(`:${RouteParam.idPlayer}`)
+  async update(@Param(RouteParam.idPlayer) idPlayer: number, @Body() dto: PlayerUpdateDto): Promise<PlayerEntity> {
     return this.playerService.update(idPlayer, dto);
   }
 }

@@ -1,14 +1,14 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Stage } from './stage.entity';
+import { StageEntity } from './stage.entity';
 
-@EntityRepository(Stage)
-export class StageRepository extends Repository<Stage> {
+@EntityRepository(StageEntity)
+export class StageRepository extends Repository<StageEntity> {
   async findByIdPlatformGameMiniGameMode(
     idPlatform: number,
     idGame: number,
     idMiniGame: number,
     idMode: number
-  ): Promise<Stage[]> {
+  ): Promise<StageEntity[]> {
     return this.createQueryBuilder('s')
       .innerJoin('s.platformGameMiniGameModeStages', 'pgmms')
       .innerJoin('pgmms.platformGameMiniGameMode', 'pgmm')

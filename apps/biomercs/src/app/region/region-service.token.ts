@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Region } from '../model/region';
+import { Region } from '@biomercs/api-interfaces';
 
 export abstract class AbstractRegionService {
   abstract get(): Observable<Region[]>;

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../auth.service';
-import { RouteParamEnum } from '../../../model/route-param.enum';
 import { map } from 'rxjs/operators';
+import { RouteParam } from '@biomercs/api-interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class SteamRegisterGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const urlTree = this.router.createUrlTree(['/']);
-    const steamid = route.paramMap.get(RouteParamEnum.steamid);
+    const steamid = route.paramMap.get(RouteParam.steamid);
     if (!steamid) {
       return urlTree;
     }

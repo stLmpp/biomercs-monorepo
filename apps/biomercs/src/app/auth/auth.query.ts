@@ -3,10 +3,10 @@ import { Query } from '@stlmpp/store';
 import { AuthStore } from './auth.store';
 import { Auth } from '../model/auth';
 import { map } from 'rxjs/operators';
-import { User } from '../model/user';
-import { Player } from '../model/player';
+import { Player } from '@biomercs/api-interfaces';
 import { Observable } from 'rxjs';
 import { isNumber } from '@stlmpp/utils';
+import { User } from '@biomercs/api-interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class AuthQuery extends Query<Auth> {

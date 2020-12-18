@@ -1,7 +1,7 @@
 import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PlayerRepository } from './player.repository';
-import { Player } from './player.entity';
-import { PlayerAddDto, PlayerUpdateDto } from './player.dto';
+import { PlayerEntity } from './player.entity';
+import { PlayerAddDto, PlayerUpdateDto } from '@biomercs/api-interfaces';
 import { SteamService } from '../steam/steam.service';
 import { RegionService } from '../region/region.service';
 
@@ -13,22 +13,22 @@ export class PlayerService {
     private regionService: RegionService
   ) {}
 
-  async add(dto: PlayerAddDto & { noUser?: boolean }): Promise<Player> {
+  async add(dto: PlayerAddDto & { noUser?: boolean }): Promise<PlayerEntity> {
     if (!dto.idRegion) {
       dto.idRegion = await this.regionService.findDefaultIdRegion();
     }
-    return this.playerRepository.save(new Player().extendDto(dto));
+    return this.playerRepository.save(new PlayerEntity().extendDto(dto));
   }
 
-  async findByIdUser(idUser: number): Promise<Player | undefined> {
+  async findByIdUser(idUser: number): Promise<PlayerEntity | undefined> {
     return this.playerRepository.findOne({ where: { idUser } });
   }
 
-  async findByIdSteamProfile(idSteamProfile: number): Promise<Player | undefined> {
+  async findByIdSteamProfile(idSteamProfile: number): Promise<PlayerEntity | undefined> {
     return this.playerRepository.findOne({ where: { idSteamProfile } });
   }
 
-  async findById(idPlayer: number): Promise<Player> {
+  async findById(idPlayer: number): Promise<PlayerEntity> {
     const player = await this.playerRepository.findOne(idPlayer, { relations: ['region'] });
     if (!player) {
       throw new NotFoundException('Player not found');
@@ -36,13 +36,13 @@ export class PlayerService {
     return player;
   }
 
-  async update(idPlayer: number, dto: PlayerUpdateDto): Promise<Player> {
+  async update(idPlayer: number, dto: PlayerUpdateDto): Promise<PlayerEntity> {
     const player = await this.playerRepository.findOneOrFail(idPlayer);
     await this.playerRepository.update(idPlayer, dto);
     if (dto.idRegion && player.idRegion !== dto.idRegion) {
       player.region = await this.regionService.findById(dto.idRegion);
     }
-    return new Player().extendDto({ ...player, ...dto });
+    return new PlayerEntity().extendDto({ ...player, ...dto });
   }
 
   async delete(idPlayer: number): Promise<void> {
@@ -57,7 +57,7 @@ export class PlayerService {
     return this.steamService.openIdUrl(player);
   }
 
-  async unlinkSteamProfile(idPlayer: number): Promise<Player> {
+  async unlinkSteamProfile(idPlayer: number): Promise<PlayerEntity> {
     return this.update(idPlayer, { idSteamProfile: undefined });
   }
 
@@ -69,7 +69,7 @@ export class PlayerService {
     return (await this.playerRepository.findOneOrFail({ select: ['id'], where: { idUser } })).id;
   }
 
-  async findRandom(): Promise<Player> {
+  async findRandom(): Promise<PlayerEntity> {
     return this.playerRepository.createQueryBuilder('p').orderBy('rand()').getOneOrFail();
   }
 }

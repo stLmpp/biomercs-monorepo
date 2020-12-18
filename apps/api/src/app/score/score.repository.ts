@@ -1,5 +1,5 @@
 import { Connection, EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
-import { Score } from './score.entity';
+import { ScoreEntity } from './score.entity';
 
 const ALL_RELATIONS = [
   'platformGameMiniGameModeStage',
@@ -18,8 +18,8 @@ const ALL_RELATIONS = [
   'scorePlayers.player',
 ];
 
-@EntityRepository(Score)
-export class ScoreRepository extends Repository<Score> {
+@EntityRepository(ScoreEntity)
+export class ScoreRepository extends Repository<ScoreEntity> {
   constructor(private connection: Connection) {
     super();
   }
@@ -29,7 +29,7 @@ export class ScoreRepository extends Repository<Score> {
     idGame: number,
     idMiniGame: number,
     idMode: number
-  ): SelectQueryBuilder<Score> {
+  ): SelectQueryBuilder<ScoreEntity> {
     return this.createQueryBuilder('score')
       .innerJoinAndSelect('score.platformGameMiniGameModeStage', 'pgmms')
       .innerJoinAndSelect('pgmms.stage', 's')
@@ -56,8 +56,8 @@ export class ScoreRepository extends Repository<Score> {
     idGame: number,
     idMiniGame: number,
     idMode: number,
-    queryBuilder: SelectQueryBuilder<Score>
-  ): SelectQueryBuilder<Score> {
+    queryBuilder: SelectQueryBuilder<ScoreEntity>
+  ): SelectQueryBuilder<ScoreEntity> {
     return queryBuilder
       .innerJoin('s.platformGameMiniGameModeStage', 'pgmms')
       .innerJoin('pgmms.platformGameMiniGameMode', 'pgmm')
@@ -76,8 +76,8 @@ export class ScoreRepository extends Repository<Score> {
     idMiniGame: number,
     idMode: number,
     idPlayer: number,
-    queryBuilder: SelectQueryBuilder<Score>
-  ): SelectQueryBuilder<Score> {
+    queryBuilder: SelectQueryBuilder<ScoreEntity>
+  ): SelectQueryBuilder<ScoreEntity> {
     return this._createQueryBuilderScore(
       idPlatform,
       idGame,
@@ -87,11 +87,11 @@ export class ScoreRepository extends Repository<Score> {
     ).andWhere('sp.idPlayer = :idPlayer', { idPlayer });
   }
 
-  async findByIdWithAllRelations(idScore: number): Promise<Score> {
+  async findByIdWithAllRelations(idScore: number): Promise<ScoreEntity> {
     return this.findOneOrFail(idScore, { relations: ALL_RELATIONS });
   }
 
-  async findByIdsWithAllRelations(idsScores: number[]): Promise<Score[]> {
+  async findByIdsWithAllRelations(idsScores: number[]): Promise<ScoreEntity[]> {
     return this.findByIds(idsScores, { relations: ALL_RELATIONS });
   }
 
@@ -100,12 +100,12 @@ export class ScoreRepository extends Repository<Score> {
     idGame: number,
     idMiniGame: number,
     idMode: number
-  ): Promise<Map<number, Score[]>> {
+  ): Promise<Map<number, ScoreEntity[]>> {
     const idsPlayers = await this.connection
       .createQueryBuilder()
       .from(
         subQuery =>
-          this._createQueryBuilderScore(idPlatform, idGame, idMiniGame, idMode, subQuery.from(Score, 's'))
+          this._createQueryBuilderScore(idPlatform, idGame, idMiniGame, idMode, subQuery.from(ScoreEntity, 's'))
             .addSelect('sp.idPlayer', 'idPlayer')
             .addSelect('max(s.score)', 'maxScore')
             .addGroupBy('pgmms.id')
@@ -119,7 +119,7 @@ export class ScoreRepository extends Repository<Score> {
       .limit(10)
       .getRawMany()
       .then(raw => raw.map(row => row.idPlayer));
-    const map = new Map<number, Score[]>();
+    const map = new Map<number, ScoreEntity[]>();
     for (const idPlayer of idsPlayers) {
       map.set(
         idPlayer,
@@ -132,7 +132,7 @@ export class ScoreRepository extends Repository<Score> {
                 idMiniGame,
                 idMode,
                 idPlayer,
-                subQuery.from(Score, 's')
+                subQuery.from(ScoreEntity, 's')
               )
                 .addSelect('pgmms.id', 'id')
                 .addSelect('max(s.score)', 'maxScore')

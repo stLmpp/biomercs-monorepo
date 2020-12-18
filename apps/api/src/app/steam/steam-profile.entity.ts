@@ -1,9 +1,10 @@
 import { Column, Entity, OneToOne } from 'typeorm';
 import { BaseEntity } from '../shared/super/base-entity';
-import { Player } from '../player/player.entity';
+import { PlayerEntity } from '../player/player.entity';
+import { SteamProfile } from '@biomercs/api-interfaces';
 
 @Entity()
-export class SteamProfile extends BaseEntity implements RawSteamProfile {
+export class SteamProfileEntity extends BaseEntity implements SteamProfile {
   @Column({ unique: true })
   steamid!: string;
 
@@ -58,27 +59,6 @@ export class SteamProfile extends BaseEntity implements RawSteamProfile {
   @Column({ nullable: true })
   gameid?: string;
 
-  @OneToOne(() => Player, player => player.steamProfile)
-  player!: Player;
-}
-
-export interface RawSteamProfile {
-  steamid: string;
-  communityvisibilitystate: number;
-  profilestate: number;
-  personaname: string;
-  profileurl: string;
-  avatar: string;
-  avatarmedium: string;
-  avatarfull: string;
-  avatarhash: string;
-  lastlogoff: number;
-  personastate: number;
-  realname?: string;
-  primaryclanid?: string;
-  timecreated?: number;
-  personastateflags: number;
-  gameextrainfo?: string;
-  gameid?: string;
-  loccountrycode?: string;
+  @OneToOne(() => PlayerEntity, player => player.steamProfile)
+  player!: PlayerEntity;
 }

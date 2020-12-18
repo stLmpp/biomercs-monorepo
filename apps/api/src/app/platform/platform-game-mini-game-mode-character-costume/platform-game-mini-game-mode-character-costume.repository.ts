@@ -1,8 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { PlatformGameMiniGameModeCharacterCostume } from './platform-game-mini-game-mode-character-costume.entity';
+import { PlatformGameMiniGameModeCharacterCostumeEntity } from './platform-game-mini-game-mode-character-costume.entity';
 
-@EntityRepository(PlatformGameMiniGameModeCharacterCostume)
-export class PlatformGameMiniGameModeCharacterCostumeRepository extends Repository<PlatformGameMiniGameModeCharacterCostume> {
+@EntityRepository(PlatformGameMiniGameModeCharacterCostumeEntity)
+export class PlatformGameMiniGameModeCharacterCostumeRepository extends Repository<PlatformGameMiniGameModeCharacterCostumeEntity> {
   async findIdByPlaformGameMiniGameModeCharacterCostume(
     idPlatform: number,
     idGame: number,

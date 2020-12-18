@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SteamRegisterComponent } from './steam-register/steam-register.component';
-import { RouteDataEnum, RouteParamEnum } from '../../model/route-param.enum';
+import { RouteDataEnum } from '../../model/route-data.enum';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { SteamRegisterGuard } from './steam-register/steam-register.guard';
 
 const routes: Routes = [
   {
-    path: `:${RouteParamEnum.steamid}`,
+    path: `:${RouteParam.steamid}`,
     canActivate: [SteamRegisterGuard],
     children: [
       {

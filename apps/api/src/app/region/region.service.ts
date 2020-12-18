@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RegionRepository } from './region.repository';
-import { Region } from './region.entity';
+import { RegionEntity } from './region.entity';
 
 @Injectable()
 export class RegionService {
@@ -16,7 +16,7 @@ export class RegionService {
     }
   }
 
-  async findAll(): Promise<Region[]> {
+  async findAll(): Promise<RegionEntity[]> {
     return this.regionRepository.find();
   }
 
@@ -24,7 +24,7 @@ export class RegionService {
     return (await this.regionRepository.findOneOrFail({ select: ['id'], where: { shortName: 'UNKNOWN' } })).id;
   }
 
-  async findById(idRegion: number): Promise<Region> {
+  async findById(idRegion: number): Promise<RegionEntity> {
     return this.regionRepository.findOneOrFail(idRegion);
   }
 }

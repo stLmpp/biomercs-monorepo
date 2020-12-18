@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Region } from '../model/region';
+import { Region } from '@biomercs/api-interfaces';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { RegionStore } from './region.store';

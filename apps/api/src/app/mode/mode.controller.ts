@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ModeService } from './mode.service';
-import { Mode } from './mode.entity';
+import { ModeEntity } from './mode.entity';
 import { ModeAddDto, ModeUpdateDto } from './mode.dto';
-import { Params } from '../shared/type/params';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { ApiAdmin } from '../auth/api-admin.decorator';
 import { ApiAuth } from '../auth/api-auth.decorator';
 
@@ -15,27 +15,27 @@ export class ModeController {
 
   @ApiAdmin()
   @Post()
-  async add(@Body() dto: ModeAddDto): Promise<Mode> {
+  async add(@Body() dto: ModeAddDto): Promise<ModeEntity> {
     return this.modeService.add(dto);
   }
 
   @ApiAdmin()
-  @Patch(`:${Params.idMode}`)
-  async update(@Param(Params.idMode) idMode: number, @Body() dto: ModeUpdateDto): Promise<Mode> {
+  @Patch(`:${RouteParam.idMode}`)
+  async update(@Param(RouteParam.idMode) idMode: number, @Body() dto: ModeUpdateDto): Promise<ModeEntity> {
     return this.modeService.update(idMode, dto);
   }
 
-  @Get(`platform/:${Params.idPlatform}/game/:${Params.idGame}/mini-game/:${Params.idMiniGame}`)
+  @Get(`platform/:${RouteParam.idPlatform}/game/:${RouteParam.idGame}/mini-game/:${RouteParam.idMiniGame}`)
   async findByIdPlatformGameMiniGame(
-    @Param(Params.idPlatform) idPlatform: number,
-    @Param(Params.idGame) idGame: number,
-    @Param(Params.idMiniGame) idMiniGame: number
-  ): Promise<Mode[]> {
+    @Param(RouteParam.idPlatform) idPlatform: number,
+    @Param(RouteParam.idGame) idGame: number,
+    @Param(RouteParam.idMiniGame) idMiniGame: number
+  ): Promise<ModeEntity[]> {
     return this.modeService.findByIdPlatformGameMiniGame(idPlatform, idGame, idMiniGame);
   }
 
-  @Get(`:${Params.idMode}`)
-  async findById(@Param(Params.idMode) idMode: number): Promise<Mode> {
+  @Get(`:${RouteParam.idMode}`)
+  async findById(@Param(RouteParam.idMode) idMode: number): Promise<ModeEntity> {
     return this.modeService.findById(idMode);
   }
 }

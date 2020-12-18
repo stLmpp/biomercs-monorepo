@@ -1,22 +1,22 @@
 import { Column, Entity, JoinColumn, ManyToOne, Unique } from 'typeorm';
 import { BaseEntity } from '../../shared/super/base-entity';
-import { PlatformGameMiniGameMode } from '../platform-game-mini-game-mode/platform-game-mini-game-mode.entity';
-import { CharacterCostume } from '../../character/character-costume/character-costume.entity';
+import { PlatformGameMiniGameModeEntity } from '../platform-game-mini-game-mode/platform-game-mini-game-mode.entity';
+import { CharacterCostumeEntity } from '../../character/character-costume/character-costume.entity';
 
 @Unique(['idPlatformGameMiniGameMode', 'idCharacterCostume'])
 @Entity()
-export class PlatformGameMiniGameModeCharacterCostume extends BaseEntity {
+export class PlatformGameMiniGameModeCharacterCostumeEntity extends BaseEntity {
   @Column()
   idPlatformGameMiniGameMode!: number;
 
-  @ManyToOne(() => PlatformGameMiniGameMode)
+  @ManyToOne(() => PlatformGameMiniGameModeEntity)
   @JoinColumn()
-  platformGameMiniGameMode!: PlatformGameMiniGameMode;
+  platformGameMiniGameMode!: PlatformGameMiniGameModeEntity;
 
   @Column()
   idCharacterCostume!: number;
 
-  @ManyToOne(() => CharacterCostume)
+  @ManyToOne(() => CharacterCostumeEntity)
   @JoinColumn()
-  characterCostume!: CharacterCostume;
+  characterCostume!: CharacterCostumeEntity;
 }

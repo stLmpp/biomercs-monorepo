@@ -1,11 +1,12 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { BaseEntity } from '../shared/super/base-entity';
-import { SteamProfile } from '../steam/steam-profile.entity';
-import { Region } from '../region/region.entity';
+import { SteamProfileEntity } from '../steam/steam-profile.entity';
+import { RegionEntity } from '../region/region.entity';
+import { Player } from '@biomercs/api-interfaces';
 
 @Entity()
-export class Player extends BaseEntity {
+export class PlayerEntity extends BaseEntity implements Player {
   @Column({ unique: true })
   personaName!: string;
 
@@ -18,16 +19,16 @@ export class Player extends BaseEntity {
   @Column({ nullable: true })
   idUser?: number;
 
-  @OneToOne(() => User, user => user.player)
+  @OneToOne(() => UserEntity, user => user.player)
   @JoinColumn()
-  user?: User;
+  user?: UserEntity;
 
   @Column({ nullable: true })
   idSteamProfile?: number;
 
-  @OneToOne(() => SteamProfile, steamProfile => steamProfile.player)
+  @OneToOne(() => SteamProfileEntity, steamProfile => steamProfile.player)
   @JoinColumn()
-  steamProfile?: SteamProfile;
+  steamProfile?: SteamProfileEntity;
 
   @Column({ default: false })
   noUser!: boolean;
@@ -35,7 +36,7 @@ export class Player extends BaseEntity {
   @Column()
   idRegion!: number;
 
-  @ManyToOne(() => Region)
+  @ManyToOne(() => RegionEntity)
   @JoinColumn()
-  region!: Region;
+  region!: RegionEntity;
 }

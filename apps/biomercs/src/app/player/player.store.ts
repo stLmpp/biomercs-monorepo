@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore } from '@stlmpp/store';
-import { Player } from '../model/player';
+import { Player } from '@biomercs/api-interfaces';
 import { AuthStore } from '../auth/auth.store';
 import { AuthQuery } from '../auth/auth.query';
 

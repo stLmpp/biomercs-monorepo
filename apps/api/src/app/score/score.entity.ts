@@ -1,17 +1,17 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../shared/super/base-entity';
-import { PlatformGameMiniGameModeStage } from '../platform/platform-game-mini-game-mode-stage/platform-game-mini-game-mode-stage.entity';
-import { ScoreStatusEnum } from './score-status.enum';
-import { ScorePlayer } from './score-player/score-player.entity';
+import { PlatformGameMiniGameModeStageEntity } from '../platform/platform-game-mini-game-mode-stage/platform-game-mini-game-mode-stage.entity';
+import { ScorePlayerEntity } from './score-player/score-player.entity';
+import { ScoreStatusEnum } from '@biomercs/api-interfaces';
 
 @Entity()
-export class Score extends BaseEntity {
+export class ScoreEntity extends BaseEntity {
   @Column()
   idPlatformGameMiniGameModeStage!: number;
 
-  @ManyToOne(() => PlatformGameMiniGameModeStage)
+  @ManyToOne(() => PlatformGameMiniGameModeStageEntity)
   @JoinColumn()
-  platformGameMiniGameModeStage!: PlatformGameMiniGameModeStage;
+  platformGameMiniGameModeStage!: PlatformGameMiniGameModeStageEntity;
 
   @Column()
   score!: number;
@@ -28,6 +28,6 @@ export class Score extends BaseEntity {
   @Column({ type: 'enum', enum: ScoreStatusEnum })
   status!: ScoreStatusEnum;
 
-  @OneToMany(() => ScorePlayer, scorePlayer => scorePlayer.score)
-  scorePlayers!: ScorePlayer[];
+  @OneToMany(() => ScorePlayerEntity, scorePlayer => scorePlayer.score)
+  scorePlayers!: ScorePlayerEntity[];
 }

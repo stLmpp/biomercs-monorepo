@@ -1,9 +1,9 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { SteamProfile } from './steam-profile.entity';
+import { SteamProfileEntity } from './steam-profile.entity';
 
-@EntityRepository(SteamProfile)
-export class SteamProfileRepository extends Repository<SteamProfile> {
-  findWithPlayerBySteamid(steamid: string): Promise<SteamProfile | undefined> {
+@EntityRepository(SteamProfileEntity)
+export class SteamProfileRepository extends Repository<SteamProfileEntity> {
+  findWithPlayerBySteamid(steamid: string): Promise<SteamProfileEntity | undefined> {
     return this.createQueryBuilder('s')
       .leftJoinAndSelect('s.player', 'p')
       .andWhere('s.steamid = :steamid', { steamid })

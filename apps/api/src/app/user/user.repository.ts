@@ -1,10 +1,10 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { UserGetDto } from './user.dto';
 
-@EntityRepository(User)
-export class UserRepository extends Repository<User> {
-  async get(dto: UserGetDto, one?: true): Promise<User[] | User | undefined> {
+@EntityRepository(UserEntity)
+export class UserRepository extends Repository<UserEntity> {
+  async get(dto: UserGetDto, one?: true): Promise<UserEntity[] | UserEntity | undefined> {
     const qb = this.createQueryBuilder('user').fillAndWhere('user', dto);
     if (one) {
       return qb.getOne();
@@ -13,7 +13,7 @@ export class UserRepository extends Repository<User> {
     }
   }
 
-  async getBySteamid(steamid: string): Promise<User | undefined> {
+  async getBySteamid(steamid: string): Promise<UserEntity | undefined> {
     return this.createQueryBuilder('u')
       .innerJoin('u.player', 'p')
       .innerJoin('p.steamProfile', 's')
@@ -21,7 +21,7 @@ export class UserRepository extends Repository<User> {
       .getOne();
   }
 
-  async findByAuthCode(code: number): Promise<User | undefined> {
+  async findByAuthCode(code: number): Promise<UserEntity | undefined> {
     return this.createQueryBuilder('u')
       .innerJoin('u.authConfirmations', 'ac')
       .andWhere('ac.code = :code', { code })

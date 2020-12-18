@@ -1,5 +1,5 @@
 import { IsBoolean, IsDefined, IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
-import { IsNumber } from '../validation/is-number';
+import { IsNumber } from '../validation';
 
 export class AuthRegisterDto {
   @IsString()

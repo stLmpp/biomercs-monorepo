@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PlatformGameMiniGameRepository } from './platform-game-mini-game.repository';
-import { PlatformGameMiniGame } from './platform-game-mini-game.entity';
+import { PlatformGameMiniGameEntity } from './platform-game-mini-game.entity';
 import { GameMiniGameService } from '../../game/game-mini-game/game-mini-game.service';
 
 @Injectable()
@@ -10,10 +10,10 @@ export class PlatformGameMiniGameService {
     private gameMiniGameService: GameMiniGameService
   ) {}
 
-  async link(idPlatform: number, idGame: number, idMiniGame: number): Promise<PlatformGameMiniGame> {
+  async link(idPlatform: number, idGame: number, idMiniGame: number): Promise<PlatformGameMiniGameEntity> {
     const idGameMiniGame = await this.gameMiniGameService.findIdByGameMiniGame(idGame, idMiniGame);
     return this.platformGameMiniGameRepository.save(
-      new PlatformGameMiniGame().extendDto({ idGameMiniGame, idPlatform })
+      new PlatformGameMiniGameEntity().extendDto({ idGameMiniGame, idPlatform })
     );
   }
 

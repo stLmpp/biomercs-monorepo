@@ -1,8 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { PlatformGameMiniGame } from './platform-game-mini-game.entity';
+import { PlatformGameMiniGameEntity } from './platform-game-mini-game.entity';
 
-@EntityRepository(PlatformGameMiniGame)
-export class PlatformGameMiniGameRepository extends Repository<PlatformGameMiniGame> {
+@EntityRepository(PlatformGameMiniGameEntity)
+export class PlatformGameMiniGameRepository extends Repository<PlatformGameMiniGameEntity> {
   async findIdByPlatformGameMiniGame(idPlatform: number, idGame: number, idMiniGame: number): Promise<number> {
     return (
       await this.createQueryBuilder('pgm')

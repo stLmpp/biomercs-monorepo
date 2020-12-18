@@ -1,14 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import {
-  AuthCredentialsDto,
-  AuthRegisterDto,
-  AuthRegisterResponse,
-  SteamLoggedEvent,
-  SteamLoggedEventErrorType,
-} from '../model/auth';
-import { User } from '../model/user';
 import { filter, finalize, switchMap, takeUntil, tap, timeout } from 'rxjs/operators';
 import { AuthStore } from './auth.store';
 import { catchAndThrow } from '../util/operators/catchError';
@@ -20,6 +12,15 @@ import { WINDOW } from '../core/window.service';
 import { SnackBarService } from '../shared/components/snack-bar/snack-bar.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { v4 } from 'uuid';
+import {
+  AuthCredentialsDto,
+  AuthRegisterDto,
+  AuthRegisterVW,
+  AuthSteamLoginSocketErrorType,
+  AuthSteamLoginSocketEvent,
+  AuthSteamLoginSocketVW,
+  User,
+} from '@biomercs/api-interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -45,8 +46,8 @@ export class AuthService {
     } as any) as any;
   }
 
-  register(dto: AuthRegisterDto): Observable<AuthRegisterResponse> {
-    return this.http.post<AuthRegisterResponse>(`${this.endPoint}/register`, dto, {
+  register(dto: AuthRegisterDto): Observable<AuthRegisterVW> {
+    return this.http.post<AuthRegisterVW>(`${this.endPoint}/register`, dto, {
       headers: AuthErrorInterceptor.ignoreHeaders,
     });
   }
@@ -107,11 +108,11 @@ export class AuthService {
               windowSteam?.close();
               let content = 'Want to create an account?';
               let btnYes = 'Create account';
-              if (errorType === SteamLoggedEventErrorType.userNotConfirmed) {
+              if (errorType === AuthSteamLoginSocketErrorType.userNotConfirmed) {
                 content = 'Want to confirm it?';
                 btnYes = 'Confirm';
               }
-              if (skipConfirmCreate && errorType === SteamLoggedEventErrorType.userNotFound) {
+              if (skipConfirmCreate && errorType === AuthSteamLoginSocketErrorType.userNotFound) {
                 request$ = of(true);
               } else {
                 request$ = this.dialogService.confirm({
@@ -128,11 +129,11 @@ export class AuthService {
                       this.addSteamToken(steamid, token, idUser);
                     }
                     let path = 'register';
-                    if (errorType === SteamLoggedEventErrorType.userNotConfirmed) {
+                    if (errorType === AuthSteamLoginSocketErrorType.userNotConfirmed) {
                       path = 'confirm';
                     }
                     const queryParams: Params = {};
-                    if (errorType === SteamLoggedEventErrorType.userNotFound && email) {
+                    if (errorType === AuthSteamLoginSocketErrorType.userNotFound && email) {
                       queryParams.email = email;
                     }
                     this.router.navigate([...steamAuthRelativePath, steamid, path], { relativeTo, queryParams }).then();
@@ -167,9 +168,9 @@ export class AuthService {
     );
   }
 
-  loginSteamSocket(uuid: string): Observable<SteamLoggedEvent> {
+  loginSteamSocket(uuid: string): Observable<AuthSteamLoginSocketVW> {
     return this.socketIOService
-      .fromEvent<SteamLoggedEvent>(SteamLoggedEvent.namespace, SteamLoggedEvent.eventName)
+      .fromEvent<AuthSteamLoginSocketVW>(AuthSteamLoginSocketEvent.namespace, AuthSteamLoginSocketEvent.eventName)
       .pipe(filter(event => event.uuid === uuid));
   }
 
@@ -197,9 +198,9 @@ export class AuthService {
       );
   }
 
-  registerSteam(steamid: string, email: string, token: string): Observable<AuthRegisterResponse> {
+  registerSteam(steamid: string, email: string, token: string): Observable<AuthRegisterVW> {
     const headers = new HttpHeaders({ 'authorization-steam': token });
-    return this.http.post<AuthRegisterResponse>(`${this.endPoint}/steam/register`, { email, steamid }, { headers });
+    return this.http.post<AuthRegisterVW>(`${this.endPoint}/steam/register`, { email, steamid }, { headers });
   }
 
   validateTokenRegisterSteam(steamid: string, token: string): Observable<boolean> {

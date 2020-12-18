@@ -3,7 +3,7 @@ import { Column, Entity } from 'typeorm';
 import { ScoreApprovalActionEnum } from '../score-approval/score-approval-action.enum';
 
 @Entity()
-export class ScoreApprovalMotive extends BaseEntity {
+export class ScoreApprovalMotiveEntity extends BaseEntity {
   @Column()
   description!: string;
 

@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { AuthConfirmation } from './auth-confirmation.entity';
+import { AuthConfirmationEntity } from './auth-confirmation.entity';
 
-@EntityRepository(AuthConfirmation)
-export class AuthConfirmationRepository extends Repository<AuthConfirmation> {}
+@EntityRepository(AuthConfirmationEntity)
+export class AuthConfirmationRepository extends Repository<AuthConfirmationEntity> {}

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RouteParamEnum } from '../model/route-param.enum';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfilePersonaNameGuard } from './profile/profile-persona-name.guard';
 import { PlayerResolver } from './player.resolver';
@@ -8,16 +8,16 @@ import { ProfileIdUserGuard } from './profile/profile-id-user.guard';
 
 const routes: Routes = [
   {
-    path: `:${RouteParamEnum.idPlayer}`,
+    path: `:${RouteParam.idPlayer}`,
     component: ProfileComponent,
     resolve: [PlayerResolver],
   },
   {
-    path: `p/:${RouteParamEnum.personaName}`,
+    path: `p/:${RouteParam.personaName}`,
     canActivate: [ProfilePersonaNameGuard],
   },
   {
-    path: `u/:${RouteParamEnum.idUser}`,
+    path: `u/:${RouteParam.idUser}`,
     canActivate: [ProfileIdUserGuard],
   },
 ];

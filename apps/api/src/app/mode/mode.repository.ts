@@ -1,9 +1,9 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Mode } from './mode.entity';
+import { ModeEntity } from './mode.entity';
 
-@EntityRepository(Mode)
-export class ModeRepository extends Repository<Mode> {
-  async findByIdPlatformGameMiniGame(idPlatform: number, idGame: number, idMiniGame: number): Promise<Mode[]> {
+@EntityRepository(ModeEntity)
+export class ModeRepository extends Repository<ModeEntity> {
+  async findByIdPlatformGameMiniGame(idPlatform: number, idGame: number, idMiniGame: number): Promise<ModeEntity[]> {
     return this.createQueryBuilder('m')
       .innerJoin('m.platformGameMiniGameModes', 'pgmm')
       .innerJoin('pgmm.platformGameMiniGame', 'pgm')

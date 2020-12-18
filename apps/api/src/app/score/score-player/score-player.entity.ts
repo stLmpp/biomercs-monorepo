@@ -1,31 +1,31 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../shared/super/base-entity';
-import { Score } from '../score.entity';
-import { Player } from '../../player/player.entity';
-import { PlatformGameMiniGameModeCharacterCostume } from '../../platform/platform-game-mini-game-mode-character-costume/platform-game-mini-game-mode-character-costume.entity';
+import { ScoreEntity } from '../score.entity';
+import { PlayerEntity } from '../../player/player.entity';
+import { PlatformGameMiniGameModeCharacterCostumeEntity } from '../../platform/platform-game-mini-game-mode-character-costume/platform-game-mini-game-mode-character-costume.entity';
 
 @Entity()
-export class ScorePlayer extends BaseEntity {
+export class ScorePlayerEntity extends BaseEntity {
   @Column()
   idScore!: number;
 
-  @ManyToOne(() => Score)
+  @ManyToOne(() => ScoreEntity)
   @JoinColumn()
-  score!: Score;
+  score!: ScoreEntity;
 
   @Column()
   idPlayer!: number;
 
-  @ManyToOne(() => Player)
+  @ManyToOne(() => PlayerEntity)
   @JoinColumn()
-  player!: Player;
+  player!: PlayerEntity;
 
   @Column()
   idPlatformGameMiniGameModeCharacterCostume!: number;
 
-  @ManyToOne(() => PlatformGameMiniGameModeCharacterCostume)
+  @ManyToOne(() => PlatformGameMiniGameModeCharacterCostumeEntity)
   @JoinColumn()
-  platformGameMiniGameModeCharacterCostume!: PlatformGameMiniGameModeCharacterCostume;
+  platformGameMiniGameModeCharacterCostume!: PlatformGameMiniGameModeCharacterCostumeEntity;
 
   @Column({ default: false })
   host!: boolean;

@@ -3,17 +3,16 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, finalize, tap } from 'rxjs/operators';
-import { AuthRegisterDto, AuthRegisterResponse } from '../../model/auth';
 import { ControlBuilder, Validators } from '@stlmpp/control';
-import { User } from '../../model/user';
+import { AuthRegisterDto, AuthRegisterVW, User } from '@biomercs/api-interfaces';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { EmailExistsValidator } from '../../shared/validators/email-exists.validator';
 import { UsernameExistsValidator } from '../../shared/validators/username-exists.validator';
 import { StateComponent } from '../../shared/components/common/state-component';
 
-interface AuthRegisterForm extends AuthRegisterDto {
-  confirmPassword: string;
-  code: number | null;
+class AuthRegisterForm extends AuthRegisterDto {
+  confirmPassword!: string;
+  code!: number | null;
 }
 
 @Component({
@@ -76,7 +75,7 @@ export class RegisterComponent extends StateComponent<{
     }
     this.updateState('loading', true);
     this.form.disable();
-    let request$: Observable<AuthRegisterResponse | User>;
+    let request$: Observable<AuthRegisterVW | User>;
     if (this.getState('emailSent')) {
       this.updateState('errorConfirmationCode', null);
       // Can't be here if code is null or undefined

@@ -2,9 +2,9 @@ import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common
 import { ApiTags } from '@nestjs/swagger';
 import { ApiAuth } from '../../auth/api-auth.decorator';
 import { ScoreApprovalMotiveService } from './score-approval-motive.service';
-import { ScoreApprovalMotive } from './score-approval-motive.entity';
+import { ScoreApprovalMotiveEntity } from './score-approval-motive.entity';
 import { ScoreApprovalMotiveAddDto, ScoreApprovalMotiveUpdateDto } from './score-approval-motive.dto';
-import { Params } from '../../shared/type/params';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { ScoreApprovalActionEnum } from '../score-approval/score-approval-action.enum';
 import { ApiAdmin } from '../../auth/api-admin.decorator';
 
@@ -16,21 +16,21 @@ export class ScoreApprovalMotiveController {
 
   @ApiAdmin()
   @Post()
-  async add(@Body() dto: ScoreApprovalMotiveAddDto): Promise<ScoreApprovalMotive> {
+  async add(@Body() dto: ScoreApprovalMotiveAddDto): Promise<ScoreApprovalMotiveEntity> {
     return this.scoreApprovalMotiveService.add(dto);
   }
 
   @ApiAdmin()
-  @Patch(`:${Params.idScoreApprovalMotive}`)
+  @Patch(`:${RouteParam.idScoreApprovalMotive}`)
   async update(
-    @Param(Params.idScoreApprovalMotive) idScoreApprovalMotive: number,
+    @Param(RouteParam.idScoreApprovalMotive) idScoreApprovalMotive: number,
     @Body() dto: ScoreApprovalMotiveUpdateDto
-  ): Promise<ScoreApprovalMotive> {
+  ): Promise<ScoreApprovalMotiveEntity> {
     return this.scoreApprovalMotiveService.update(idScoreApprovalMotive, dto);
   }
 
   @Get('action')
-  async findByAction(@Query(Params.action) action: ScoreApprovalActionEnum): Promise<ScoreApprovalMotive[]> {
+  async findByAction(@Query(RouteParam.action) action: ScoreApprovalActionEnum): Promise<ScoreApprovalMotiveEntity[]> {
     return this.scoreApprovalMotiveService.findByAction(action);
   }
 }

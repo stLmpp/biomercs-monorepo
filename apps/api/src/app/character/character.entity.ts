@@ -1,11 +1,12 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../shared/super/base-entity';
-import { CharacterCostume } from './character-costume/character-costume.entity';
+import { CharacterCostumeEntity } from './character-costume/character-costume.entity';
+import { Character } from '@biomercs/api-interfaces';
 
 @Entity()
-export class Character extends BaseEntity {
+export class CharacterEntity extends BaseEntity implements Character {
   @Column() name!: string;
 
-  @OneToMany(() => CharacterCostume, characterCostume => characterCostume.character)
-  characterCostumes!: CharacterCostume[];
+  @OneToMany(() => CharacterCostumeEntity, characterCostume => characterCostume.character)
+  characterCostumes!: CharacterCostumeEntity[];
 }

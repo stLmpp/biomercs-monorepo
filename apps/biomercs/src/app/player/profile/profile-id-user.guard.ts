@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PlayerService } from '../player.service';
-import { RouteParamEnum } from '../../model/route-param.enum';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class ProfileIdUserGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const idUser = +route.paramMap.get(RouteParamEnum.idUser)!;
+    const idUser = +route.paramMap.get(RouteParam.idUser)!;
     return this.playerService
       .getIdByIdUser(idUser)
       .pipe(map(idPlayer => this.router.createUrlTree(['/player', idPlayer])));

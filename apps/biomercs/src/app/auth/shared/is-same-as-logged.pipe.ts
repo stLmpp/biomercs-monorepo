@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Player } from '../../model/player';
+import { Player } from '@biomercs/api-interfaces';
 import { AuthQuery } from '../auth.query';
 import { isNumber } from '@stlmpp/utils';
 

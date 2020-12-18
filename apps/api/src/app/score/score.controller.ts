@@ -3,9 +3,9 @@ import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ApiAuth } from '../auth/api-auth.decorator';
 import { ScoreService } from './score.service';
 import { ScoreAddDto } from './score.dto';
-import { Params } from '../shared/type/params';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { ScoreViewModel } from './view-model/score.view-model';
-import { Score } from './score.entity';
+import { ScoreEntity } from './score.entity';
 import { ScoreTableViewModel } from './view-model/score-table.view-model';
 
 @ApiAuth()
@@ -29,7 +29,7 @@ export class ScoreController {
     @Query('game') game?: string,
     @Query('miniGame') miniGame?: string,
     @Query('mode') mode?: string
-  ): Promise<Score> {
+  ): Promise<ScoreEntity> {
     return this.scoreService.insert({ miniGame, platform, mode, game });
   }
 
@@ -44,26 +44,26 @@ export class ScoreController {
     @Query('game') game?: string,
     @Query('miniGame') miniGame?: string,
     @Query('mode') mode?: string
-  ): Promise<Score[]> {
+  ): Promise<ScoreEntity[]> {
     return Promise.all(
       Array.from({ length: q }).map(() => this.scoreService.insert({ miniGame, platform, mode, game }))
     );
   }
 
   @Get(
-    `platform/:${Params.idPlatform}/game/:${Params.idGame}/mini-game/:${Params.idMiniGame}/mode/:${Params.idMode}/score-table`
+    `platform/:${RouteParam.idPlatform}/game/:${RouteParam.idGame}/mini-game/:${RouteParam.idMiniGame}/mode/:${RouteParam.idMode}/score-table`
   )
   async findScoreTable(
-    @Param(Params.idPlatform) idPlatform: number,
-    @Param(Params.idGame) idGame: number,
-    @Param(Params.idMiniGame) idMiniGame: number,
-    @Param(Params.idMode) idMode: number
+    @Param(RouteParam.idPlatform) idPlatform: number,
+    @Param(RouteParam.idGame) idGame: number,
+    @Param(RouteParam.idMiniGame) idMiniGame: number,
+    @Param(RouteParam.idMode) idMode: number
   ): Promise<ScoreTableViewModel[]> {
     return this.scoreService.findScoreTable(idPlatform, idGame, idMiniGame, idMode);
   }
 
-  @Get(`:${Params.idScore}`)
-  async findByIdMapped(@Param(Params.idScore) idScore: number): Promise<ScoreViewModel> {
+  @Get(`:${RouteParam.idScore}`)
+  async findByIdMapped(@Param(RouteParam.idScore) idScore: number): Promise<ScoreViewModel> {
     return this.scoreService.findByIdMapped(idScore);
   }
 }

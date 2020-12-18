@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CharacterService } from './character.service';
-import { Character } from './character.entity';
+import { CharacterEntity } from './character.entity';
 import { CharacterAddDto, CharacterUpdateDto } from './character.dto';
-import { Params } from '../shared/type/params';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { ApiAdmin } from '../auth/api-admin.decorator';
 import { ApiAuth } from '../auth/api-auth.decorator';
-import { CharacterCostume } from './character-costume/character-costume.entity';
+import { CharacterCostumeEntity } from './character-costume/character-costume.entity';
 import { CharacterCostumeAddDto } from './character-costume/character-costume.dto';
 import { CharacterCostumeService } from './character-costume/character-costume.service';
 
@@ -18,37 +18,42 @@ export class CharacterController {
 
   @ApiAdmin()
   @Post()
-  async add(@Body() dto: CharacterAddDto): Promise<Character> {
+  async add(@Body() dto: CharacterAddDto): Promise<CharacterEntity> {
     return this.characterService.add(dto);
   }
 
   @ApiAdmin()
-  @Patch(`:${Params.idCharacter}`)
-  async update(@Param(Params.idCharacter) idCharacter: number, @Body() dto: CharacterUpdateDto): Promise<Character> {
+  @Patch(`:${RouteParam.idCharacter}`)
+  async update(
+    @Param(RouteParam.idCharacter) idCharacter: number,
+    @Body() dto: CharacterUpdateDto
+  ): Promise<CharacterEntity> {
     return this.characterService.update(idCharacter, dto);
   }
 
   @ApiAdmin()
-  @Post(`:${Params.idCharacter}/costume`)
+  @Post(`:${RouteParam.idCharacter}/costume`)
   async addCostume(
-    @Param(Params.idCharacter) idCharacter: number,
+    @Param(RouteParam.idCharacter) idCharacter: number,
     @Body() dto: CharacterCostumeAddDto
-  ): Promise<CharacterCostume> {
+  ): Promise<CharacterCostumeEntity> {
     return this.characterCostumeService.add(idCharacter, dto);
   }
 
-  @Get(`platform/:${Params.idPlatform}/game/:${Params.idGame}/mini-game/:${Params.idMiniGame}/mode/:${Params.idMode}`)
+  @Get(
+    `platform/:${RouteParam.idPlatform}/game/:${RouteParam.idGame}/mini-game/:${RouteParam.idMiniGame}/mode/:${RouteParam.idMode}`
+  )
   async findByIdPlatformGameMiniGameMode(
-    @Param(Params.idPlatform) idPlatform: number,
-    @Param(Params.idGame) idGame: number,
-    @Param(Params.idMiniGame) idMiniGame: number,
-    @Param(Params.idMode) idMode: number
-  ): Promise<Character[]> {
+    @Param(RouteParam.idPlatform) idPlatform: number,
+    @Param(RouteParam.idGame) idGame: number,
+    @Param(RouteParam.idMiniGame) idMiniGame: number,
+    @Param(RouteParam.idMode) idMode: number
+  ): Promise<CharacterEntity[]> {
     return this.characterService.findByIdPlatformGameMiniGameMode(idPlatform, idGame, idMiniGame, idMode);
   }
 
-  @Get(`:${Params.idCharacter}`)
-  async findById(@Param(Params.idCharacter) idCharacter: number): Promise<Character> {
+  @Get(`:${RouteParam.idCharacter}`)
+  async findById(@Param(RouteParam.idCharacter) idCharacter: number): Promise<CharacterEntity> {
     return this.characterService.findById(idCharacter);
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore } from '@stlmpp/store';
-import { Region } from '../model/region';
+import { Region } from '@biomercs/api-interfaces';
 import { environment } from '../../environments/environment';
 
 export type RegionState = EntityState<Region>;

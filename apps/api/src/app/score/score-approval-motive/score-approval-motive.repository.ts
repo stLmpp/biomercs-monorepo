@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { ScoreApprovalMotive } from './score-approval-motive.entity';
+import { ScoreApprovalMotiveEntity } from './score-approval-motive.entity';
 
-@EntityRepository(ScoreApprovalMotive)
-export class ScoreApprovalMotiveRepository extends Repository<ScoreApprovalMotive> {}
+@EntityRepository(ScoreApprovalMotiveEntity)
+export class ScoreApprovalMotiveRepository extends Repository<ScoreApprovalMotiveEntity> {}

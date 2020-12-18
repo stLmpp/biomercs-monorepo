@@ -1,14 +1,14 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Character } from './character.entity';
+import { CharacterEntity } from './character.entity';
 
-@EntityRepository(Character)
-export class CharacterRepository extends Repository<Character> {
+@EntityRepository(CharacterEntity)
+export class CharacterRepository extends Repository<CharacterEntity> {
   async findByIdPlatformGameMiniGameMode(
     idPlatform: number,
     idGame: number,
     idMiniGame: number,
     idMode: number
-  ): Promise<Character[]> {
+  ): Promise<CharacterEntity[]> {
     return this.createQueryBuilder('c')
       .innerJoinAndSelect('c.characterCostumes', 'cc')
       .innerJoin('cc.platformGameMiniGameModeCharacterCostumes', 'pgmmcc')

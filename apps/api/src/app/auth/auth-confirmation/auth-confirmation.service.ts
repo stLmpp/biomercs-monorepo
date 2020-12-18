@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException, PreconditionFailedException } from '@nestjs/common';
 import { AuthConfirmationRepository } from './auth-confirmation.repository';
 import { AuthConfirmationAddDto } from './auth-confirmation.dto';
-import { AuthConfirmation } from './auth-confirmation.entity';
+import { AuthConfirmationEntity } from './auth-confirmation.entity';
 import { FindConditions, MoreThanOrEqual } from 'typeorm';
 import { addDays, addHours, isBefore } from 'date-fns';
 import { random } from '../../util/util';
@@ -10,7 +10,7 @@ import { random } from '../../util/util';
 export class AuthConfirmationService {
   constructor(private authConfirmationRepository: AuthConfirmationRepository) {}
 
-  async add(dto: AuthConfirmationAddDto): Promise<AuthConfirmation> {
+  async add(dto: AuthConfirmationAddDto): Promise<AuthConfirmationEntity> {
     const exists = await this.authConfirmationRepository.exists({
       idUser: dto.idUser,
       expirationDate: MoreThanOrEqual(new Date()),
@@ -18,7 +18,7 @@ export class AuthConfirmationService {
     if (exists) {
       throw new BadRequestException('User already waiting for confirmation!');
     }
-    return this.authConfirmationRepository.save(new AuthConfirmation().extendDto(dto));
+    return this.authConfirmationRepository.save(new AuthConfirmationEntity().extendDto(dto));
   }
 
   async invalidateCode(idUser: number, code: number): Promise<void> {
@@ -48,7 +48,7 @@ export class AuthConfirmationService {
   }
 
   async hasConfirmationPending(idUser: number, code?: number): Promise<boolean> {
-    const options: FindConditions<AuthConfirmation> = { idUser, expirationDate: MoreThanOrEqual(new Date()) };
+    const options: FindConditions<AuthConfirmationEntity> = { idUser, expirationDate: MoreThanOrEqual(new Date()) };
     if (code) {
       options.code = code;
     }
@@ -64,7 +64,7 @@ export class AuthConfirmationService {
     return code;
   }
 
-  async getByIdUser(idUser: number): Promise<AuthConfirmation | undefined> {
+  async getByIdUser(idUser: number): Promise<AuthConfirmationEntity | undefined> {
     return this.authConfirmationRepository.findOne({ where: { idUser, expirationDate: MoreThanOrEqual(new Date()) } });
   }
 }

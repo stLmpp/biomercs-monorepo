@@ -1,24 +1,24 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Unique } from 'typeorm';
-import { Game } from '../game.entity';
+import { GameEntity } from '../game.entity';
 import { BaseEntity } from '../../shared/super/base-entity';
-import { MiniGame } from '../../mini-game/mini-game.entity';
-import { PlatformGameMiniGame } from '../../platform/platform-game-mini-game/platform-game-mini-game.entity';
+import { MiniGameEntity } from '../../mini-game/mini-game.entity';
+import { PlatformGameMiniGameEntity } from '../../platform/platform-game-mini-game/platform-game-mini-game.entity';
 
 @Unique(['idGame', 'idMiniGame'])
 @Entity()
-export class GameMiniGame extends BaseEntity {
+export class GameMiniGameEntity extends BaseEntity {
   @Column() idGame!: number;
 
-  @ManyToOne(() => Game)
+  @ManyToOne(() => GameEntity)
   @JoinColumn()
-  game!: Game;
+  game!: GameEntity;
 
   @Column() idMiniGame!: number;
 
-  @ManyToOne(() => MiniGame)
+  @ManyToOne(() => MiniGameEntity)
   @JoinColumn()
-  miniGame!: MiniGame;
+  miniGame!: MiniGameEntity;
 
-  @OneToMany(() => PlatformGameMiniGame, platformGameMiniGame => platformGameMiniGame.gameMiniGame)
-  platformGameMiniGames!: PlatformGameMiniGame[];
+  @OneToMany(() => PlatformGameMiniGameEntity, platformGameMiniGame => platformGameMiniGame.gameMiniGame)
+  platformGameMiniGames!: PlatformGameMiniGameEntity[];
 }

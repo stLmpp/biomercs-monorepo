@@ -1,6 +1,5 @@
 import { IsArray, IsDefined, IsNotEmpty, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator';
-import { IsNumber } from '../validation/is-number';
-import { IsDate } from '../validation/is-date';
+import { IsDate, IsNumber } from '@biomercs/api-interfaces';
 import { ScorePlayerAddDto } from './score-player/score-player.dto';
 import { Type } from 'class-transformer';
 

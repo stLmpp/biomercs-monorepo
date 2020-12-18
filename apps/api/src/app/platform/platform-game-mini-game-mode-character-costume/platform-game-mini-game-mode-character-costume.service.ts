@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PlatformGameMiniGameModeCharacterCostumeRepository } from './platform-game-mini-game-mode-character-costume.repository';
 import { PlatformGameMiniGameModeService } from '../platform-game-mini-game-mode/platform-game-mini-game-mode.service';
-import { PlatformGameMiniGameModeCharacterCostume } from './platform-game-mini-game-mode-character-costume.entity';
+import { PlatformGameMiniGameModeCharacterCostumeEntity } from './platform-game-mini-game-mode-character-costume.entity';
 
 @Injectable()
 export class PlatformGameMiniGameModeCharacterCostumeService {
@@ -16,7 +16,7 @@ export class PlatformGameMiniGameModeCharacterCostumeService {
     idMiniGame: number,
     idMode: number,
     idCharacterCostume: number
-  ): Promise<PlatformGameMiniGameModeCharacterCostume> {
+  ): Promise<PlatformGameMiniGameModeCharacterCostumeEntity> {
     const idPlatformGameMiniGameMode = await this.platformGameMiniGameModeService.findIdByPlaformGameMiniGameMode(
       idPlatform,
       idGame,
@@ -24,7 +24,7 @@ export class PlatformGameMiniGameModeCharacterCostumeService {
       idMode
     );
     return this.platformGameMiniGameModeCharacterCostumeRepository.save(
-      new PlatformGameMiniGameModeCharacterCostume().extendDto({ idCharacterCostume, idPlatformGameMiniGameMode })
+      new PlatformGameMiniGameModeCharacterCostumeEntity().extendDto({ idCharacterCostume, idPlatformGameMiniGameMode })
     );
   }
 
@@ -61,7 +61,7 @@ export class PlatformGameMiniGameModeCharacterCostumeService {
     );
   }
 
-  async findRandom(idPlatformGameMiniGameMode: number): Promise<PlatformGameMiniGameModeCharacterCostume> {
+  async findRandom(idPlatformGameMiniGameMode: number): Promise<PlatformGameMiniGameModeCharacterCostumeEntity> {
     return this.platformGameMiniGameModeCharacterCostumeRepository
       .createQueryBuilder('pgmmcc')
       .andWhere('pgmmcc.idPlatformGameMiniGameMode = :idPlatformGameMiniGameMode', { idPlatformGameMiniGameMode })

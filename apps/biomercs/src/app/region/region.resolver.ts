@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { Region } from '../model/region';
+import { Region } from '@biomercs/api-interfaces';
 import { RegionService } from './region.service';
 import { Observable } from 'rxjs';
 

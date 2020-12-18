@@ -1,28 +1,28 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { UserAddDto, UserGetDto, UserUpdateDto } from './user.dto';
-import { User } from './user.entity';
-import { AuthCredentialsDto } from '../auth/auth.dto';
+import { UserEntity } from './user.entity';
+import { AuthCredentialsDto } from '@biomercs/api-interfaces';
 import { FindConditions } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async add(dto: UserAddDto): Promise<User> {
-    return this.userRepository.save(new User().extendDto(dto));
+  async add(dto: UserAddDto): Promise<UserEntity> {
+    return this.userRepository.save(new UserEntity().extendDto(dto));
   }
 
-  async update(idUser: number, dto: UserUpdateDto): Promise<User> {
+  async update(idUser: number, dto: UserUpdateDto): Promise<UserEntity> {
     const user = await this.userRepository.findOne(idUser);
     if (!user) {
       throw new NotFoundException('User not found');
     }
     await this.userRepository.update(idUser, dto);
-    return new User().extendDto({ ...user, ...dto });
+    return new UserEntity().extendDto({ ...user, ...dto });
   }
 
-  async updatePassword(idUser: number, password: string): Promise<User> {
+  async updatePassword(idUser: number, password: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne(idUser);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -31,21 +31,21 @@ export class UserService {
     return user;
   }
 
-  async getById(idUser: number): Promise<User | undefined> {
+  async getById(idUser: number): Promise<UserEntity | undefined> {
     return this.userRepository.findOne(idUser);
   }
 
-  async get(dto: UserGetDto, one: true): Promise<User | undefined>;
-  async get(dto: UserGetDto): Promise<User[]>;
-  async get(dto: UserGetDto, one?: true): Promise<User[] | User | undefined> {
+  async get(dto: UserGetDto, one: true): Promise<UserEntity | undefined>;
+  async get(dto: UserGetDto): Promise<UserEntity[]>;
+  async get(dto: UserGetDto, one?: true): Promise<UserEntity[] | UserEntity | undefined> {
     return this.userRepository.get(dto, one);
   }
 
-  async getByEmailOrUsername(username?: string, email?: string): Promise<User | undefined> {
+  async getByEmailOrUsername(username?: string, email?: string): Promise<UserEntity | undefined> {
     if (!username && !email) {
       throw new BadRequestException('Needs at least one parameter');
     }
-    const where: FindConditions<User>[] = [];
+    const where: FindConditions<UserEntity>[] = [];
     if (username) {
       where.push({ username });
     }
@@ -59,7 +59,7 @@ export class UserService {
     if (!username && !email) {
       throw new BadRequestException('Needs at least one parameter');
     }
-    const where: FindConditions<User>[] = [];
+    const where: FindConditions<UserEntity>[] = [];
     if (username) {
       where.push({ username });
     }
@@ -69,7 +69,7 @@ export class UserService {
     return this.userRepository.exists(where);
   }
 
-  async validateUserToLogin(dto: AuthCredentialsDto): Promise<User> {
+  async validateUserToLogin(dto: AuthCredentialsDto): Promise<UserEntity> {
     const user = await this.userRepository.findOne({
       where: [{ username: dto.username }, { email: dto.username }],
     });
@@ -86,7 +86,7 @@ export class UserService {
     return user;
   }
 
-  async getPasswordAndSalt(idUser: number): Promise<Pick<User, 'password' | 'salt'>> {
+  async getPasswordAndSalt(idUser: number): Promise<Pick<UserEntity, 'password' | 'salt'>> {
     const user = await this.userRepository.findOne(idUser, { select: ['password', 'salt'] });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -94,11 +94,11 @@ export class UserService {
     return user;
   }
 
-  async getBySteamid(steamid: string): Promise<User | undefined> {
+  async getBySteamid(steamid: string): Promise<UserEntity | undefined> {
     return this.userRepository.getBySteamid(steamid);
   }
 
-  async findByAuthCode(code: number): Promise<User | undefined> {
+  async findByAuthCode(code: number): Promise<UserEntity | undefined> {
     return this.userRepository.findByAuthCode(code);
   }
 }

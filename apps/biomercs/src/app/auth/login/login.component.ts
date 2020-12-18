@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { Control, ControlGroup, Validators } from '@stlmpp/control';
-import { AuthCredentialsDto } from '../../model/auth';
 import { AuthService } from '../auth.service';
 import { WINDOW } from '../../core/window.service';
 import { filter, finalize, takeUntil, withLatestFrom } from 'rxjs/operators';
@@ -10,7 +9,7 @@ import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
 import { ModalService } from '../../shared/components/modal/modal.service';
 import type { LoginConfirmCodeModalComponent } from './login-confirm-code-modal/login-confirm-code-modal.component';
-import { HttpStatusCode } from '../../model/http-code.enum';
+import { AuthCredentialsDto, HttpStatusCode } from '@biomercs/api-interfaces';
 import { HttpError } from '../../model/http-error';
 import { StateComponent } from '../../shared/components/common/state-component';
 

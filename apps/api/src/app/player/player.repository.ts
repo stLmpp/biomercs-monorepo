@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Player } from './player.entity';
+import { PlayerEntity } from './player.entity';
 
-@EntityRepository(Player)
-export class PlayerRepository extends Repository<Player> {}
+@EntityRepository(PlayerEntity)
+export class PlayerRepository extends Repository<PlayerEntity> {}

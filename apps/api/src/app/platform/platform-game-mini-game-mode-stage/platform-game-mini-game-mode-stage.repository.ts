@@ -1,14 +1,14 @@
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
-import { PlatformGameMiniGameModeStage } from './platform-game-mini-game-mode-stage.entity';
+import { PlatformGameMiniGameModeStageEntity } from './platform-game-mini-game-mode-stage.entity';
 
-@EntityRepository(PlatformGameMiniGameModeStage)
-export class PlatformGameMiniGameModeStageRepository extends Repository<PlatformGameMiniGameModeStage> {
+@EntityRepository(PlatformGameMiniGameModeStageEntity)
+export class PlatformGameMiniGameModeStageRepository extends Repository<PlatformGameMiniGameModeStageEntity> {
   private _createQueryBuilderRelations(
     idPlatform: number,
     idGame: number,
     idMiniGame: number,
     idMode: number
-  ): SelectQueryBuilder<PlatformGameMiniGameModeStage> {
+  ): SelectQueryBuilder<PlatformGameMiniGameModeStageEntity> {
     return this.createQueryBuilder('pgmms')
       .innerJoin('pgmms.platformGameMiniGameMode', 'pgmm')
       .innerJoin('pgmm.platformGameMiniGame', 'pgm')
@@ -24,7 +24,7 @@ export class PlatformGameMiniGameModeStageRepository extends Repository<Platform
     idMiniGame: number,
     idMode: number,
     idStage: number
-  ): SelectQueryBuilder<PlatformGameMiniGameModeStage> {
+  ): SelectQueryBuilder<PlatformGameMiniGameModeStageEntity> {
     return this._createQueryBuilderRelations(
       idPlatform,
       idGame,
@@ -53,7 +53,7 @@ export class PlatformGameMiniGameModeStageRepository extends Repository<Platform
     idMiniGame: number,
     idMode: number,
     idStage: number
-  ): Promise<PlatformGameMiniGameModeStage> {
+  ): Promise<PlatformGameMiniGameModeStageEntity> {
     return this._createQueryBuilderRelationsWithStage(idPlatform, idGame, idMiniGame, idMode, idStage).getOneOrFail();
   }
 
@@ -62,7 +62,7 @@ export class PlatformGameMiniGameModeStageRepository extends Repository<Platform
     idGame: number,
     idMiniGame: number,
     idMode: number
-  ): Promise<PlatformGameMiniGameModeStage[]> {
+  ): Promise<PlatformGameMiniGameModeStageEntity[]> {
     return this._createQueryBuilderRelations(idPlatform, idGame, idMiniGame, idMode).getMany();
   }
 }

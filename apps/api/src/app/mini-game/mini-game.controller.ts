@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { MiniGameService } from './mini-game.service';
-import { MiniGame } from './mini-game.entity';
+import { MiniGameEntity } from './mini-game.entity';
 import { MiniGameAddDto, MiniGameUpdateDto } from './mini-game.dto';
-import { Params } from '../shared/type/params';
+import { RouteParam } from '@biomercs/api-interfaces';
 import { ApiAdmin } from '../auth/api-admin.decorator';
 import { ApiAuth } from '../auth/api-auth.decorator';
 
@@ -15,26 +15,29 @@ export class MiniGameController {
 
   @ApiAdmin()
   @Post()
-  async add(@Body() dto: MiniGameAddDto): Promise<MiniGame> {
+  async add(@Body() dto: MiniGameAddDto): Promise<MiniGameEntity> {
     return this.miniGameService.add(dto);
   }
 
   @ApiAdmin()
-  @Patch(`:${Params.idMiniGame}`)
-  async update(@Param(Params.idMiniGame) idMiniGame: number, @Body() dto: MiniGameUpdateDto): Promise<MiniGame> {
+  @Patch(`:${RouteParam.idMiniGame}`)
+  async update(
+    @Param(RouteParam.idMiniGame) idMiniGame: number,
+    @Body() dto: MiniGameUpdateDto
+  ): Promise<MiniGameEntity> {
     return this.miniGameService.update(idMiniGame, dto);
   }
 
-  @Get(`platform/:${Params.idPlatform}/game/:${Params.idGame}`)
+  @Get(`platform/:${RouteParam.idPlatform}/game/:${RouteParam.idGame}`)
   async findByIdPlatformGame(
-    @Param(Params.idPlatform) idPlatform: number,
-    @Param(Params.idGame) idGame: number
-  ): Promise<MiniGame[]> {
+    @Param(RouteParam.idPlatform) idPlatform: number,
+    @Param(RouteParam.idGame) idGame: number
+  ): Promise<MiniGameEntity[]> {
     return this.miniGameService.findByIdPlatformGame(idPlatform, idGame);
   }
 
-  @Get(`:${Params.idMiniGame}`)
-  async findById(@Param(Params.idMiniGame) idMiniGame: number): Promise<MiniGame> {
+  @Get(`:${RouteParam.idMiniGame}`)
+  async findById(@Param(RouteParam.idMiniGame) idMiniGame: number): Promise<MiniGameEntity> {
     return this.miniGameService.findById(idMiniGame);
   }
 }

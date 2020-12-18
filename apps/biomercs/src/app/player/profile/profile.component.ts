@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { PlayerQuery } from '../player.query';
 import { RouterQuery } from '@stlmpp/router';
-import { RouteParamEnum } from '../../model/route-param.enum';
+import { PlayerUpdateDto, RouteParam } from '@biomercs/api-interfaces';
 import { debounceTime, filter, map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
-import { Player, PlayerUpdateDto } from '../../model/player';
+import { Player } from '@biomercs/api-interfaces';
 import { isObjectEmpty } from '@stlmpp/utils';
 import { PlayerService } from '../player.service';
 import { StateComponent } from '../../shared/components/common/state-component';
@@ -35,7 +35,7 @@ export class ProfileComponent extends StateComponent<{ editMode: boolean; loadin
   }
 
   private _update$ = new BehaviorSubject<PlayerUpdateDto>({});
-  private _idPlayer$ = this.routerQuery.selectParams(RouteParamEnum.idPlayer).pipe(
+  private _idPlayer$ = this.routerQuery.selectParams(RouteParam.idPlayer).pipe(
     filter(idPlayer => !!idPlayer),
     map(Number)
   );
@@ -47,7 +47,7 @@ export class ProfileComponent extends StateComponent<{ editMode: boolean; loadin
 
   get idPlayer(): number {
     // idPlayer is required to access this component
-    return +this.routerQuery.getParams(RouteParamEnum.idPlayer)!;
+    return +this.routerQuery.getParams(RouteParam.idPlayer)!;
   }
 
   get player(): Player {

@@ -1,7 +1,8 @@
 import { Column, CreateDateColumn, DeepPartial, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Base } from '@biomercs/api-interfaces';
 
-export abstract class BaseEntity {
+export abstract class BaseEntity implements Base {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id!: number;

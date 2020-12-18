@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Player, PlayerUpdateDto } from '../model/player';
+import { Player, PlayerUpdateDto } from '@biomercs/api-interfaces';
 import { PlayerStore } from './player.store';
 import { tap } from 'rxjs/operators';
 

@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouteDataEnum, RouteParamEnum } from '../../../model/route-param.enum';
+import { RouteDataEnum } from '../../../model/route-data.enum';
 import { RouterQuery } from '@stlmpp/router';
 import { ControlBuilder, Validators } from '@stlmpp/control';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
-import { AuthRegisterResponse } from '../../../model/auth';
-import { User } from '../../../model/user';
 import { catchAndThrow } from '../../../util/operators/catchError';
 import { StateComponent } from '../../../shared/components/common/state-component';
+import { AuthRegisterVW, RouteParam, User } from '@biomercs/api-interfaces';
 
 interface SteamRegisterForm {
   code: number | null;
@@ -41,7 +40,7 @@ export class SteamRegisterComponent
 
   get steamid(): string {
     // This component is only accessible when there's a steamid in the route
-    return this.activatedRoute.snapshot.paramMap.get(RouteParamEnum.steamid)!;
+    return this.activatedRoute.snapshot.paramMap.get(RouteParam.steamid)!;
   }
 
   get token(): [string, number?] {
@@ -66,7 +65,7 @@ export class SteamRegisterComponent
     }
     this.updateState('loading', true);
     this.form.disable();
-    let request$: Observable<User | AuthRegisterResponse>;
+    let request$: Observable<User | AuthRegisterVW>;
     if (this.getState('emailSent')) {
       this.updateState('confirmCodeError', null);
       const { code } = this.form.value;
@@ -109,9 +108,9 @@ export class SteamRegisterComponent
       const [, idUser] = this.token;
       this.idUser = idUser!;
     }
-    if (this.activatedRoute.snapshot.queryParamMap.has(RouteParamEnum.email)) {
+    if (this.activatedRoute.snapshot.queryParamMap.has(RouteParam.email)) {
       // Well, just did the validation up here, sooooo
-      this.form.get('email').setValue(this.activatedRoute.snapshot.queryParamMap.get(RouteParamEnum.email)!);
+      this.form.get('email').setValue(this.activatedRoute.snapshot.queryParamMap.get(RouteParam.email)!);
     }
   }
 
