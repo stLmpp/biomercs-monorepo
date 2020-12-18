@@ -3,7 +3,7 @@
   "DB_PORT": 3306,
   "DB_USERNAME": "root",
   "DB_PASSWORD": "mysql",
-  "DB_DATABASE": "biomercs3",
+  "DB_DATABASE": "biomercs2",
   "DB_SYNCHRONIZE": true,
   "PORT": 3000,
   "HOST": "localhost",

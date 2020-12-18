@@ -4,6 +4,9 @@
 
 export const environment = {
   production: false,
+  api: '/api',
+  dev: true,
+  cacheTimeout: 450_000,
 };
 
 /*
