@@ -1,0 +1,211 @@
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  ElementRef,
+  forwardRef,
+  HostBinding,
+  HostListener,
+  Input,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation,
+} from '@angular/core';
+import { ControlValue } from '@stlmpp/control';
+import { Select } from './select';
+import { Subject } from 'rxjs';
+import { OptionComponent } from './option.component';
+import { isNil } from '@stlmpp/utils';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { cdkOverlayTransparentBackdrop, overlayPositions } from '../../../util/overlay';
+import { takeUntil } from 'rxjs/operators';
+import { FocusKeyManager } from '@angular/cdk/a11y';
+import { Animations } from '../../animations/animations';
+import { AnimationEvent } from '@angular/animations';
+import { Key } from 'ts-key-enum';
+
+@Component({
+  selector: 'bio-select',
+  templateUrl: './select.component.html',
+  styleUrls: ['./select.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: { class: 'bio-select input' },
+  providers: [
+    { provide: Select, useExisting: forwardRef(() => SelectComponent) },
+    { provide: ControlValue, useExisting: forwardRef(() => SelectComponent), multi: true },
+  ],
+  animations: [Animations.fade.inOut(100), Animations.scale.in(100, 0.8)],
+})
+// I had to do "implements", instead of "extends", so I can use the "Select" abastract class
+export class SelectComponent extends Select implements ControlValue, AfterContentInit {
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private overlay: Overlay,
+    private viewContainerRef: ViewContainerRef,
+    private elementRef: ElementRef<HTMLElement>
+  ) {
+    super();
+  }
+
+  private _contentInitialized = false;
+  private _valueToSetAfterContentInit: any;
+  private _overlayRef?: OverlayRef;
+  private _focusManager?: FocusKeyManager<OptionComponent>;
+
+  @ViewChild('panel', { read: TemplateRef }) panelTemplateRef!: TemplateRef<any>;
+  @ContentChildren(OptionComponent, { descendants: true }) options!: QueryList<OptionComponent>;
+
+  @Input() compareWith: (valueA: any, valueB: any) => boolean = Object.is;
+
+  onChange$ = new Subject<any>();
+  onTouched$ = new Subject<void>();
+
+  viewValue: any;
+  value: any;
+
+  isOpen = false;
+
+  get primaryClass(): boolean {
+    return !this.dangerClass && (this.bioType || 'primary') === 'primary';
+  }
+
+  private _setViewValueFromOptions(value: any): void {
+    const optionSelected = this.options.find(option => this.compareWith(option.value, value));
+    if (optionSelected) {
+      this.setViewValue(optionSelected.getViewValue());
+    }
+  }
+
+  @HostBinding('attr.tabindex')
+  get tabindex(): number {
+    return this.disabled ? -1 : 0;
+  }
+
+  @HostBinding('class.is-open')
+  get isOpenClass(): boolean {
+    return !this.disabled && this.isOpen;
+  }
+
+  @HostListener('click')
+  onClick(): void {
+    if (this.disabled) {
+      return;
+    }
+    this.isOpen ? this.close() : this.open();
+  }
+
+  @HostListener('keydown.space')
+  @HostListener('keydown.enter')
+  @HostListener('keydown.arrowUp')
+  @HostListener('keydown.arrowDown')
+  onKeydown(): void {
+    this.open();
+  }
+
+  onFadeInOutDone($event: AnimationEvent): void {
+    if ($event.toState === 'void') {
+      this._overlayRef?.dispose();
+      this.elementRef.nativeElement.focus();
+    }
+  }
+
+  isSelected(value: any): boolean {
+    return this.compareWith(this.value, value);
+  }
+
+  onPanelKeydown($event: KeyboardEvent): void {
+    this._focusManager?.onKeydown($event);
+    if ($event.key === Key.Escape) {
+      this.close();
+    }
+  }
+
+  initFocus(): void {
+    this._focusManager = new FocusKeyManager(this.options).withVerticalOrientation();
+    if (!isNil(this.value)) {
+      const optionSelected = this.options.toArray().findIndex(option => this.compareWith(option.value, this.value));
+      this._focusManager.setActiveItem(Math.max(optionSelected, 0));
+    } else {
+      this._focusManager.setFirstItemActive();
+    }
+  }
+
+  open(): void {
+    this._overlayRef = this.overlay.create({
+      scrollStrategy: this.overlay.scrollStrategies.block(),
+      positionStrategy: this.overlay
+        .position()
+        .flexibleConnectedTo(this.elementRef.nativeElement)
+        .withPositions([
+          { ...overlayPositions.bottom, offsetY: 2, overlayX: 'start', originX: 'start' },
+          { ...overlayPositions.bottom, offsetY: 2, overlayX: 'end', originX: 'end' },
+          { ...overlayPositions.top, offsetY: -2, overlayX: 'start', originX: 'start' },
+          { ...overlayPositions.top, offsetY: -2, overlayX: 'end', originX: 'end' },
+        ]),
+      backdropClass: cdkOverlayTransparentBackdrop,
+      minWidth: 200,
+      minHeight: 32,
+      width: this.elementRef.nativeElement.getBoundingClientRect().width,
+      hasBackdrop: true,
+    });
+    const portal = new TemplatePortal(this.panelTemplateRef, this.viewContainerRef);
+    this._overlayRef.attach(portal);
+    this._overlayRef
+      .backdropClick()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.close();
+      });
+    this.initFocus();
+    this.isOpen = true;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  close(): void {
+    this.isOpen = false;
+    this._overlayRef?.detach();
+    this.changeDetectorRef.markForCheck();
+  }
+
+  setViewValue(value: any): void {
+    this.viewValue = value;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  setControlValue(value: any): void {
+    this.onChange$.next(value);
+    this.value = value;
+    this.close();
+  }
+
+  setValue(value: any): void {
+    if (!this._contentInitialized) {
+      this._valueToSetAfterContentInit = value;
+    } else {
+      this._setViewValueFromOptions(value);
+    }
+    this.value = value;
+  }
+
+  setDisabled(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  stateChanged(): void {}
+
+  ngAfterContentInit(): void {
+    this._contentInitialized = true;
+    if (!isNil(this._valueToSetAfterContentInit)) {
+      setTimeout(() => {
+        this._setViewValueFromOptions(this._valueToSetAfterContentInit);
+      }, 100);
+    }
+  }
+}

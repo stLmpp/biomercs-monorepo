@@ -1,7 +1,8 @@
 import { IsBoolean, IsDefined, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 import { IsNumber } from '@biomercs/api-validation';
+import { ScorePlayerAdd } from '@biomercs/api-dto';
 
-export class ScorePlayerAddDto {
+export class ScorePlayerAddDto implements ScorePlayerAdd {
   @IsDefined()
   @IsNumber()
   idPlayer!: number;

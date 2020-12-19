@@ -2,8 +2,9 @@ import { IsArray, IsDefined, IsNotEmpty, IsOptional, IsString, MaxLength, Valida
 import { IsDate, IsNumber } from '@biomercs/api-validation';
 import { ScorePlayerAddDto } from './score-player/score-player.dto';
 import { Type } from 'class-transformer';
+import { ScoreAdd } from '@biomercs/api-dto';
 
-export class ScoreAddDto {
+export class ScoreAddDto implements ScoreAdd {
   @IsNumber()
   @IsDefined()
   idPlatform!: number;

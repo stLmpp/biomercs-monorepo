@@ -1,0 +1,17 @@
+<div class="select-value" [innerHTML]="viewValue"></div>
+<div class="select-icon">
+  <icon>keyboard_arrow_down</icon>
+</div>
+<ng-template #panel>
+  <div
+    class="select-panel"
+    tabindex="0"
+    (keydown)="onPanelKeydown($event)"
+    cdkTrapFocus
+    @fadeInOut
+    @scaleIn
+    (@fadeInOut.done)="onFadeInOutDone($event)"
+  >
+    <ng-content></ng-content>
+  </div>
+</ng-template>

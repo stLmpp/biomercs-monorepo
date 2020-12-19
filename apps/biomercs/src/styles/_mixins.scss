@@ -27,12 +27,22 @@
 @mixin _form-focus($type) {
   &.#{$type} {
     &:not(.disabled):not([disabled]):not(:disabled) {
-      &:focus {
+      &:focus,
+      &.is-open {
         box-shadow: 0 0 0 2px transparentize(get-color($type, 300), 0.5);
       }
       &:active {
         box-shadow: 0 0 0 3px transparentize(get-color($type, 300), 0.5);
       }
     }
+  }
+}
+
+@mixin disabled() {
+  &.disabled,
+  &:disabled,
+  &[disabled] {
+    cursor: default;
+    color: hsla(0, 0%, 100%, 0.5);
   }
 }

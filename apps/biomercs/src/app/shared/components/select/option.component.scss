@@ -1,0 +1,22 @@
+@import 'variables';
+@import 'mixins';
+
+.bio-option {
+  padding: 0.5rem 1rem;
+  outline: none;
+  cursor: pointer;
+  &.selected {
+    font-weight: 500;
+  }
+  &:not(.disabled) {
+    &:hover,
+    &:focus,
+    &.selected {
+      background-color: $primary-100;
+    }
+  }
+  &.disabled {
+    cursor: default;
+    color: hsla(0, 0%, 100%, 0.5);
+  }
+}
