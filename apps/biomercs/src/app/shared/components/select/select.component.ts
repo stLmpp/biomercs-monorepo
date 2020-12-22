@@ -23,11 +23,12 @@ import { isNil } from '@stlmpp/utils';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { cdkOverlayTransparentBackdrop, overlayPositions } from '../../../util/overlay';
-import { takeUntil } from 'rxjs/operators';
+import { auditTime, takeUntil } from 'rxjs/operators';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { Animations } from '../../animations/animations';
 import { AnimationEvent } from '@angular/animations';
 import { Key } from 'ts-key-enum';
+import { OptgroupComponent } from './optgroup.component';
 
 @Component({
   selector: 'bio-select',
@@ -53,33 +54,25 @@ export class SelectComponent extends Select implements ControlValue, AfterConten
     super();
   }
 
-  private _contentInitialized = false;
-  private _valueToSetAfterContentInit: any;
   private _overlayRef?: OverlayRef;
   private _focusManager?: FocusKeyManager<OptionComponent>;
 
   @ViewChild('panel', { read: TemplateRef }) panelTemplateRef!: TemplateRef<any>;
   @ContentChildren(OptionComponent, { descendants: true }) options!: QueryList<OptionComponent>;
+  @ContentChildren(OptgroupComponent, { descendants: true }) optgroups!: QueryList<OptgroupComponent>;
 
   @Input() compareWith: (valueA: any, valueB: any) => boolean = Object.is;
+  @Input() placeholder?: string;
+
+  @HostBinding('attr.title') viewValue = '';
 
   onChange$ = new Subject<any>();
   onTouched$ = new Subject<void>();
-
-  viewValue: any;
-  value: any;
-
   isOpen = false;
+  value: any;
 
   get primaryClass(): boolean {
     return !this.dangerClass && (this.bioType || 'primary') === 'primary';
-  }
-
-  private _setViewValueFromOptions(value: any): void {
-    const optionSelected = this.options.find(option => this.compareWith(option.value, value));
-    if (optionSelected) {
-      this.setViewValue(optionSelected.getViewValue());
-    }
   }
 
   @HostBinding('attr.tabindex')
@@ -90,6 +83,15 @@ export class SelectComponent extends Select implements ControlValue, AfterConten
   @HostBinding('class.is-open')
   get isOpenClass(): boolean {
     return !this.disabled && this.isOpen;
+  }
+
+  private _setViewValueFromOptions(value: any): void {
+    const optionSelected = this.options?.find(option => this.compareWith(option.value, value));
+    if (optionSelected) {
+      this.setViewValue(optionSelected.getViewValue());
+    } else {
+      this.setViewValue(null);
+    }
   }
 
   @HostListener('click')
@@ -108,10 +110,14 @@ export class SelectComponent extends Select implements ControlValue, AfterConten
     this.open();
   }
 
+  @HostListener('blur')
+  onBlur(): void {
+    this.onTouched$.next();
+  }
+
   onFadeInOutDone($event: AnimationEvent): void {
     if ($event.toState === 'void') {
       this._overlayRef?.dispose();
-      this.elementRef.nativeElement.focus();
     }
   }
 
@@ -127,7 +133,7 @@ export class SelectComponent extends Select implements ControlValue, AfterConten
   }
 
   initFocus(): void {
-    this._focusManager = new FocusKeyManager(this.options).withVerticalOrientation();
+    this._focusManager = new FocusKeyManager(this.options).withVerticalOrientation().withTypeAhead(400);
     if (!isNil(this.value)) {
       const optionSelected = this.options.toArray().findIndex(option => this.compareWith(option.value, this.value));
       this._focusManager.setActiveItem(Math.max(optionSelected, 0));
@@ -185,11 +191,7 @@ export class SelectComponent extends Select implements ControlValue, AfterConten
   }
 
   setValue(value: any): void {
-    if (!this._contentInitialized) {
-      this._valueToSetAfterContentInit = value;
-    } else {
-      this._setViewValueFromOptions(value);
-    }
+    this._setViewValueFromOptions(value);
     this.value = value;
   }
 
@@ -201,11 +203,8 @@ export class SelectComponent extends Select implements ControlValue, AfterConten
   stateChanged(): void {}
 
   ngAfterContentInit(): void {
-    this._contentInitialized = true;
-    if (!isNil(this._valueToSetAfterContentInit)) {
-      setTimeout(() => {
-        this._setViewValueFromOptions(this._valueToSetAfterContentInit);
-      }, 100);
-    }
+    this.options.changes.pipe(takeUntil(this.destroy$), auditTime(100)).subscribe(() => {
+      this._setViewValueFromOptions(this.value);
+    });
   }
 }

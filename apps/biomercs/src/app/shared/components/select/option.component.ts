@@ -6,27 +6,37 @@ import {
   HostBinding,
   HostListener,
   Input,
+  Optional,
   ViewEncapsulation,
 } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
 import { Select } from './select';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { OptgroupComponent } from './optgroup.component';
 
 @Component({
   selector: 'bio-option',
-  templateUrl: './option.component.html',
+  template: '<ng-content></ng-content>',
   styleUrls: ['./option.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'bio-option' },
   encapsulation: ViewEncapsulation.None,
 })
 export class OptionComponent implements FocusableOption {
-  constructor(private elementRef: ElementRef, @Host() private select: Select) {}
+  constructor(
+    private elementRef: ElementRef<HTMLElement>,
+    @Host() private select: Select,
+    @Host() @Optional() public optgroupComponent?: OptgroupComponent
+  ) {}
 
   private _disabled = false;
 
   @Input() value: any;
+  @Input() labelTypeahead?: string;
+  @Input() labelFn: (optionComponent: OptionComponent) => string = optionComponent =>
+    this.optgroupComponent
+      ? `<span>${this.optgroupComponent.label}</span> ${this.elementRef.nativeElement.innerHTML}`
+      : optionComponent.elementRef.nativeElement.innerHTML;
 
   @HostBinding('class.disabled')
   @Input()
@@ -62,12 +72,16 @@ export class OptionComponent implements FocusableOption {
     this.select.setViewValue(this.getViewValue());
   }
 
-  getViewValue(): SafeHtml {
-    return this.elementRef.nativeElement.innerHTML;
+  getViewValue(): string {
+    return this.labelFn(this);
   }
 
   focus(): void {
     this.elementRef.nativeElement.focus();
+  }
+
+  getLabel(): string {
+    return this.labelTypeahead ?? this.elementRef.nativeElement.innerText;
   }
 
   static ngAcceptInputType_disabled: BooleanInput;

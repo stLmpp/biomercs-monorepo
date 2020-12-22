@@ -23,8 +23,8 @@ export class FormFieldErrorsDirective extends ControlError implements AfterConte
   }
 
   ngAfterContentInit(): void {
-    if (this.formFieldComponent.inputDirective?.controlDirective?.control) {
-      this.controlError = this.formFieldComponent.inputDirective?.controlDirective?.control;
+    if (this.formFieldComponent.controlDirective?.control) {
+      this.controlError = this.formFieldComponent.controlDirective.control;
       super.ngOnInit();
     }
   }

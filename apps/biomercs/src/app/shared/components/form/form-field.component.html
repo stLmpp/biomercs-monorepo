@@ -7,9 +7,10 @@
 <div
   class="input-wrapper"
   [ngClass]="{
-    'has-prefix': prefixDirective,
-    'has-suffix': sufixDirective,
-    disabled: inputDirective?.controlDirective?.isDisabled
+    'has-prefix': !!prefixDirective,
+    'has-suffix': !!sufixDirective,
+    disabled: controlDirective?.isDisabled,
+    'is-select': !!selectComponent
   }"
 >
   <div class="spinner-wrapper">
@@ -24,13 +25,7 @@
   </div>
 </div>
 <div class="bottom-wrapper">
-  <div
-    class="hints"
-    *ngIf="
-      !inputDirective?.controlDirective?.isTouched || !(inputDirective?.controlDirective?.control?.hasErrors$ | async)
-    "
-    @fadeIn
-  >
+  <div class="hints" *ngIf="controlDirective?.isTouched || !(controlDirective?.control?.hasErrors$ | async)" @fadeIn>
     <ng-content select="hint:not([end]),[hint]:not([end])"></ng-content>
     <div class="hint-spacer"></div>
     <ng-content select="hint[end],[hint][end]"></ng-content>

@@ -33,6 +33,11 @@
     &.disabled {
       pointer-events: none;
     }
+    &.is-select {
+      > .spinner-wrapper {
+        right: 2rem;
+      }
+    }
     > .spinner-wrapper {
       position: absolute;
       display: flex;

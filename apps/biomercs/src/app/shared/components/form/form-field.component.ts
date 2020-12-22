@@ -21,6 +21,9 @@ import { auditTime, takeUntil } from 'rxjs/operators';
 import { FormFieldErrorComponent } from './error.component';
 import { PrefixDirective } from '../common/prefix.directive';
 import { SuffixDirective } from '../common/suffix.directive';
+import { ControlDirective } from '@stlmpp/control';
+import { SelectComponent } from '../select/select.component';
+import { BooleanInput } from '@angular/cdk/coercion';
 
 let uniqueId = 0;
 
@@ -40,15 +43,17 @@ export class FormFieldComponent implements AfterContentInit, OnChanges, OnDestro
 
   @ContentChild(LabelDirective) labelDirective?: LabelDirective;
   @ContentChild(InputDirective) inputDirective?: InputDirective;
+  @ContentChild(ControlDirective) controlDirective?: ControlDirective;
   @ContentChildren(FormFieldErrorComponent, { descendants: true }) errorComponents!: QueryList<FormFieldErrorComponent>;
   @ContentChild(PrefixDirective) prefixDirective?: PrefixDirective;
   @ContentChild(SuffixDirective) sufixDirective?: SuffixDirective;
+  @ContentChild(SelectComponent) selectComponent?: SelectComponent;
 
   @Input() label?: string;
   @Input() id: string | number = uniqueId++;
 
-  @Input() loading?: boolean;
-  @Input() disabled?: boolean;
+  @Input() loading?: BooleanInput;
+  @Input() disabled?: BooleanInput;
 
   ngAfterContentInit(): void {
     if (this.labelDirective) {
@@ -65,16 +70,18 @@ export class FormFieldComponent implements AfterContentInit, OnChanges, OnDestro
             }
             this.changeDetectorRef.markForCheck();
           });
-        if (!isNil(this.loading) || !isNil(this.disabled)) {
-          this.inputDirective.controlDirective.disabled = !!this.loading || !!this.disabled;
-        }
+      }
+    }
+    if (this.controlDirective) {
+      if (!isNil(this.disabled)) {
+        this.controlDirective.disabled = !!this.disabled;
       }
     }
   }
 
   ngOnChanges(changes: SimpleChangesCustom<FormFieldComponent>): void {
-    if (changes.disabled && this.inputDirective?.controlDirective) {
-      this.inputDirective.controlDirective.disabled = !!changes.disabled.currentValue;
+    if (changes.disabled && this.controlDirective) {
+      this.controlDirective.disabled = !!changes.disabled.currentValue;
     }
   }
 
