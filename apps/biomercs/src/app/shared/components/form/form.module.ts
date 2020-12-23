@@ -10,6 +10,7 @@ import { FormFieldHintDirective } from './hint.directive';
 import { NgLetModule } from '../../let/ng-let.module';
 import { TextareaDirective } from './textarea.directive';
 import { BioCommonModule } from '../common/bio-common.module';
+import { SelectModule } from '../select/select.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,6 @@ import { BioCommonModule } from '../common/bio-common.module';
     TextareaDirective,
     BioCommonModule,
   ],
-  imports: [CommonModule, SpinnerModule, NgLetModule, BioCommonModule],
+  imports: [CommonModule, SpinnerModule, NgLetModule, BioCommonModule, SelectModule],
 })
 export class FormModule {}
