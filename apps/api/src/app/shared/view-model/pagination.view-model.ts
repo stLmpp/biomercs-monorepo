@@ -1,7 +1,7 @@
 import { IPaginationLinks, IPaginationMeta } from 'nestjs-typeorm-paginate';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class PaginationMeta implements IPaginationMeta {
+export class PaginationMetaViewModel implements IPaginationMeta {
   currentPage!: number;
   itemCount!: number;
   itemsPerPage!: number;
@@ -9,7 +9,7 @@ export class PaginationMeta implements IPaginationMeta {
   totalPages!: number;
 }
 
-export class PaginationLinks implements IPaginationLinks {
+export class PaginationLinksViewModel implements IPaginationLinks {
   @ApiPropertyOptional()
   first?: string;
 

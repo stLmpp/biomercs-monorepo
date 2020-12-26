@@ -51,8 +51,10 @@ export abstract class StateComponent<T extends Record<string, any> = Record<stri
     );
   }
 
-  getState<K extends keyof T>(key: K): T[K] {
-    return this._state$.value[key];
+  getState(): T;
+  getState<K extends keyof T>(key: K): T[K];
+  getState<K extends keyof T>(key?: K): T | T[K] {
+    return key ? this._state$.value[key] : this._state$.value;
   }
 }
 

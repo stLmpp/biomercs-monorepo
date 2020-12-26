@@ -6,7 +6,8 @@ import { ScoreAddDto } from './score.dto';
 import { RouteParam } from '@biomercs/api-interfaces';
 import { ScoreViewModel } from './view-model/score.view-model';
 import { ScoreEntity } from './score.entity';
-import { ScoreTableViewModel } from './view-model/score-table.view-model';
+import { ScoreTopTableViewModel } from './view-model/score-table.view-model';
+import { OptionalQueryPipe } from '../shared/pipe/optional-query.pipe';
 
 @ApiAuth()
 @ApiTags('Score')
@@ -57,9 +58,11 @@ export class ScoreController {
     @Param(RouteParam.idPlatform) idPlatform: number,
     @Param(RouteParam.idGame) idGame: number,
     @Param(RouteParam.idMiniGame) idMiniGame: number,
-    @Param(RouteParam.idMode) idMode: number
-  ): Promise<ScoreTableViewModel[]> {
-    return this.scoreService.findScoreTable(idPlatform, idGame, idMiniGame, idMode);
+    @Param(RouteParam.idMode) idMode: number,
+    @Query(RouteParam.page) page: number,
+    @Query(RouteParam.limit, OptionalQueryPipe) limit?: number
+  ): Promise<ScoreTopTableViewModel> {
+    return this.scoreService.findScoreTable(idPlatform, idGame, idMiniGame, idMode, page, limit ?? 100);
   }
 
   @Get(`:${RouteParam.idScore}`)

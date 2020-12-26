@@ -68,6 +68,9 @@
   @include button($accent-type);
   @include button($danger-type);
   @include form-focus();
+  &.block {
+    width: 100%;
+  }
   &:not(.disabled) {
     &:focus {
       box-shadow: 0 0 0 2px transparentize($white, 0.5);

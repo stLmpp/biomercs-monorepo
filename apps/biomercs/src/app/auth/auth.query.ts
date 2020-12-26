@@ -37,4 +37,9 @@ export class AuthQuery extends Query<Auth> {
     const idPlayer = isNumber(value) ? value : value.id;
     return this.user$.pipe(map(user => user?.player?.id === idPlayer));
   }
+
+  getIsSameAsLogged(value: number | Player): boolean {
+    const idPlayer = isNumber(value) ? value : value.id;
+    return this.getUser()?.player?.id === idPlayer;
+  }
 }

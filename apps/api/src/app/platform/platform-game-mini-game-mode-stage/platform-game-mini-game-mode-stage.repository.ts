@@ -10,6 +10,7 @@ export class PlatformGameMiniGameModeStageRepository extends Repository<Platform
     idMode: number
   ): SelectQueryBuilder<PlatformGameMiniGameModeStageEntity> {
     return this.createQueryBuilder('pgmms')
+      .innerJoinAndSelect('pgmms.stage', 's')
       .innerJoin('pgmms.platformGameMiniGameMode', 'pgmm')
       .innerJoin('pgmm.platformGameMiniGame', 'pgm')
       .innerJoin('pgm.gameMiniGame', 'gm')

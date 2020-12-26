@@ -12,8 +12,9 @@ import { random } from '../util/util';
 import { ScorePlayerEntity } from './score-player/score-player.entity';
 import { PlayerService } from '../player/player.service';
 import { PlatformGameMiniGameModeCharacterCostumeService } from '../platform/platform-game-mini-game-mode-character-costume/platform-game-mini-game-mode-character-costume.service';
-import { ScoreTableViewModel } from './view-model/score-table.view-model';
+import { ScoreTableViewModel, ScoreTopTableViewModel } from './view-model/score-table.view-model';
 import { ScoreStatusEnum } from '@biomercs/api-interfaces';
+import { StageEntity } from '../stage/stage.entity';
 
 @Injectable()
 export class ScoreService {
@@ -118,16 +119,26 @@ export class ScoreService {
     idPlatform: number,
     idGame: number,
     idMiniGame: number,
-    idMode: number
-  ): Promise<ScoreTableViewModel[]> {
+    idMode: number,
+    page: number,
+    limit: number
+  ): Promise<ScoreTopTableViewModel> {
     const platformGameMiniGameModeStages = await this.platformGameMiniGameModeStageService.findByPlatformGameMiniGameMode(
       idPlatform,
       idGame,
       idMiniGame,
       idMode
     );
-    const scoreMap = await this.scoreRepository.findScoreTable(idPlatform, idGame, idMiniGame, idMode);
+    const [scoreMap, meta] = await this.scoreRepository.findScoreTable(
+      idPlatform,
+      idGame,
+      idMiniGame,
+      idMode,
+      page,
+      limit
+    );
     const scoreTableViewModel: ScoreTableViewModel[] = [];
+    let position = (page - 1) * limit + 1;
     for (const [idPlayer, scores] of scoreMap) {
       const player = scores.find(score => score)!.scorePlayers.find(scorePlayer => scorePlayer.idPlayer === idPlayer)!
         .player;
@@ -139,8 +150,13 @@ export class ScoreService {
         scoresMapped.find(score => score.idPlatformGameMiniGameModeStage === platformGameMiniGameModeStage.id)
       );
       scoreTable.total = scoreTable.scores.reduce((acc, score) => acc + (score?.score ?? 0), 0);
+      scoreTable.position = position++;
       scoreTableViewModel.push(scoreTable);
     }
-    return scoreTableViewModel;
+    return {
+      scoreTables: scoreTableViewModel,
+      stages: platformGameMiniGameModeStages.reduce((acc, item) => [...acc, item.stage], [] as StageEntity[]),
+      meta,
+    };
   }
 }

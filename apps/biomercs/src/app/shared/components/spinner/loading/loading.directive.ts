@@ -17,7 +17,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Directive({
   selector: '[bioLoading]',
-  host: { '[style.position]': `'relative'` },
+  host: { '[style.position]': `'relative'`, '[style.min-height]': `'150px'` },
 })
 export class LoadingDirective implements OnInit, AfterViewInit, OnDestroy {
   constructor(

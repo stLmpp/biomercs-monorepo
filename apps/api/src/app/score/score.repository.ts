@@ -1,5 +1,6 @@
 import { Connection, EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
 import { ScoreEntity } from './score.entity';
+import { PaginationMetaViewModel } from '../shared/view-model/pagination.view-model';
 
 const ALL_RELATIONS = [
   'platformGameMiniGameModeStage',
@@ -99,9 +100,11 @@ export class ScoreRepository extends Repository<ScoreEntity> {
     idPlatform: number,
     idGame: number,
     idMiniGame: number,
-    idMode: number
-  ): Promise<Map<number, ScoreEntity[]>> {
-    const idsPlayers = await this.connection
+    idMode: number,
+    page: number,
+    limit: number
+  ): Promise<[Map<number, ScoreEntity[]>, PaginationMetaViewModel]> {
+    const { meta, items } = await this.connection
       .createQueryBuilder()
       .from(
         subQuery =>
@@ -116,9 +119,8 @@ export class ScoreRepository extends Repository<ScoreEntity> {
       .addSelect('sum(maxScore)', 'sumScore')
       .groupBy('idPlayer')
       .orderBy('sumScore', 'DESC')
-      .limit(10)
-      .getRawMany()
-      .then(raw => raw.map(row => row.idPlayer));
+      .paginateRaw<{ idPlayer: number }>(page, limit);
+    const idsPlayers = items.map(row => row.idPlayer);
     const map = new Map<number, ScoreEntity[]>();
     for (const idPlayer of idsPlayers) {
       map.set(
@@ -143,6 +145,6 @@ export class ScoreRepository extends Repository<ScoreEntity> {
           .getMany()
       );
     }
-    return map;
+    return [map, meta];
   }
 }

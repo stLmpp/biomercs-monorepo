@@ -16,15 +16,18 @@ import { GameService } from '../services/game/game.service';
 import { MiniGameService } from '../services/mini-game/mini-game.service';
 import { ModeService } from '../services/mode/mode.service';
 import { filterNil } from '../operators/filter';
-import { debounceTime, distinctUntilChanged, finalize, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, map, skip, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { StageService } from '../services/stage/stage.service';
 import { trackByFactory } from '@stlmpp/utils';
 import { Character, CharacterCostume, Game, MiniGame, Mode, Platform, Stage } from '@biomercs/api-interfaces';
 import { StateComponent } from '../components/common/state-component';
 import { CharacterService } from '../services/character/character.service';
+import { distinctUntilChangedObject } from '../../util/operators/distinct-until-changed-object';
+import { Router } from '@angular/router';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
-interface ParamsForm {
+export interface ParamsForm {
   idPlatform: Nullable<number>;
   idGame: Nullable<number>;
   idMiniGame: Nullable<number>;
@@ -75,7 +78,8 @@ export class ParamsComponent
     private miniGameService: MiniGameService,
     private modeService: ModeService,
     private stageService: StageService,
-    private characterService: CharacterService
+    private characterService: CharacterService,
+    private router: Router
   ) {
     super({
       gameLoading: false,
@@ -86,6 +90,8 @@ export class ParamsComponent
     });
   }
 
+  private _setQueryParamsOnChange = false;
+
   @Input()
   set config(config: Partial<ParamsConfig>) {
     this.formsConfig = ids.reduce(
@@ -94,8 +100,15 @@ export class ParamsComponent
     );
   }
 
-  @Input() set params(params: Partial<ParamsForm>) {
-    this.form.patchValue(params);
+  @Input() set params(params: Partial<ParamsForm> | null) {
+    if (params) {
+      this.form.patchValue(params, { emitChange: false });
+    }
+  }
+
+  @Input()
+  set setQueryParamsOnChange(setQueryParamsOnChange: boolean) {
+    this._setQueryParamsOnChange = coerceBooleanProperty(setQueryParamsOnChange);
   }
 
   @Output() idPlatformChange = new EventEmitter<Nullable<number>>();
@@ -296,6 +309,18 @@ export class ParamsComponent
         control.setValidators(formConfig.validators);
       }
     }
+    this.form.value$
+      .pipe(
+        skip(1),
+        takeUntil(this.destroy$),
+        distinctUntilChangedObject(),
+        tap(params => {
+          if (this._setQueryParamsOnChange) {
+            this.router.navigate([], { queryParamsHandling: 'merge', queryParams: params }).then();
+          }
+        })
+      )
+      .subscribe(params => this.paramsChange.emit(params));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -307,4 +332,6 @@ export class ParamsComponent
     }
     this.form.patchValue(params);
   }
+
+  static ngAcceptInputType_setQueryParamsOnChange: BooleanInput;
 }

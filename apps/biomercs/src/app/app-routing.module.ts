@@ -8,14 +8,9 @@ const routes: Routes = [
     loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
     canLoad: [AdminGuard],
   },
-  {
-    path: 'auth',
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
-  },
-  {
-    path: 'player',
-    loadChildren: () => import('./player/player.module').then(m => m.PlayerModule),
-  },
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
+  { path: 'player', loadChildren: () => import('./player/player.module').then(m => m.PlayerModule) },
+  { path: 'score', loadChildren: () => import('./score/score.module').then(m => m.ScoreModule) },
 ];
 
 @NgModule({

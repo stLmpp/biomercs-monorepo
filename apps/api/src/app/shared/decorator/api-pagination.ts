@@ -1,16 +1,16 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOkResponse, ApiProperty } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { PaginationLinks, PaginationMeta } from '../view-model/pagination.view-model';
+import { PaginationLinksViewModel, PaginationMetaViewModel } from '../view-model/pagination.view-model';
 import { Type } from '../../util/type';
 
 function paginateType(type: Type, name?: string): Type<Pagination<any>> {
   class Paginate implements Pagination<any> {
     @ApiProperty()
-    links!: PaginationLinks;
+    links!: PaginationLinksViewModel;
 
     @ApiProperty()
-    meta!: PaginationMeta;
+    meta!: PaginationMetaViewModel;
 
     @ApiProperty({ type, isArray: true })
     items!: any[];

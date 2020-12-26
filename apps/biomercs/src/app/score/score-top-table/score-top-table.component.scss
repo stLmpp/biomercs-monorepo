@@ -1,0 +1,52 @@
+@import 'variables';
+
+.card {
+  margin-bottom: 1rem;
+}
+
+.top-table {
+  font-size: 0.85rem;
+  background-color: $primary;
+  color: $primary-600;
+  .header {
+    > div {
+      cursor: pointer;
+    }
+  }
+  .header,
+  .body > div {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    > div {
+      &:first-child {
+        flex-grow: 0;
+        flex-basis: 25px;
+      }
+      &.player {
+        flex-basis: 100px;
+      }
+      &.pos-1 {
+        color: $gold;
+      }
+      &.pos-2 {
+        color: $silver;
+      }
+      &.pos-3 {
+        color: $bronze;
+      }
+      > .order-icon {
+        position: absolute;
+        right: 0;
+      }
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

@@ -24,6 +24,11 @@ const withInterceptors = (...interceptors: any[]): Provider[] =>
     multi: true,
   }));
 
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
+
 @NgModule({
   declarations: [ErrorComponent],
   imports: [CommonModule, ModalModule, ButtonModule, SnackBarModule],

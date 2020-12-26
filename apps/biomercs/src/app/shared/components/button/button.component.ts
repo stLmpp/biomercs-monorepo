@@ -17,6 +17,7 @@ export class ButtonComponent extends AbstractComponent {
 
   private _loading = false;
   private _tabindex = 0;
+  private _block = false;
 
   get disabledClass(): boolean | null {
     return this.loading || this.disabled || null;
@@ -59,9 +60,19 @@ export class ButtonComponent extends AbstractComponent {
     return coerceBooleanProperty(this.fab);
   }
 
+  @Input()
+  @HostBinding('class.block')
+  get block(): boolean {
+    return this._block;
+  }
+  set block(block: boolean) {
+    this._block = coerceBooleanProperty(block);
+  }
+
   get nativeElement(): HTMLButtonElement {
     return this.elementRef.nativeElement;
   }
 
   static ngAcceptInputType_loading: BooleanInput;
+  static ngAcceptInputType_block: BooleanInput;
 }

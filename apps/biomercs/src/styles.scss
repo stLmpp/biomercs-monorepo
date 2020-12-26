@@ -23,3 +23,8 @@ body {
 ::-webkit-scrollbar-thumb {
   background: $dark-weak;
 }
+
+hr {
+  border: 0;
+  border-bottom: 1px solid $primary-200;
+}

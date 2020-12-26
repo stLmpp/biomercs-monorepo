@@ -23,7 +23,7 @@ import { isNil } from '@stlmpp/utils';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { cdkOverlayTransparentBackdrop, overlayPositions } from '../../../util/overlay';
-import { auditTime, takeUntil } from 'rxjs/operators';
+import { auditTime, startWith, takeUntil } from 'rxjs/operators';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { Animations } from '../../animations/animations';
 import { AnimationEvent } from '@angular/animations';
@@ -203,7 +203,7 @@ export class SelectComponent extends Select implements ControlValue, AfterConten
   stateChanged(): void {}
 
   ngAfterContentInit(): void {
-    this.options.changes.pipe(takeUntil(this.destroy$), auditTime(100)).subscribe(() => {
+    this.options.changes.pipe(takeUntil(this.destroy$), auditTime(100), startWith(this.options)).subscribe(() => {
       this._setViewValueFromOptions(this.value);
     });
   }

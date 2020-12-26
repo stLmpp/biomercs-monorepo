@@ -24,4 +24,7 @@ export enum RouteParam {
   openidReturnTo = 'openid.return_to',
   uuid = 'uuid',
   action = 'action',
+  limit = 'limit',
+  page = 'page',
+  itemsPerPage = 'itemsPerPage',
 }

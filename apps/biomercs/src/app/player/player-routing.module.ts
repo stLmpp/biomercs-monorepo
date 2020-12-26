@@ -8,17 +8,17 @@ import { ProfileIdUserGuard } from './profile/profile-id-user.guard';
 
 const routes: Routes = [
   {
-    path: `:${RouteParam.idPlayer}`,
-    component: ProfileComponent,
-    resolve: [PlayerResolver],
-  },
-  {
     path: `p/:${RouteParam.personaName}`,
     canActivate: [ProfilePersonaNameGuard],
   },
   {
     path: `u/:${RouteParam.idUser}`,
     canActivate: [ProfileIdUserGuard],
+  },
+  {
+    path: `:${RouteParam.idPlayer}`,
+    component: ProfileComponent,
+    resolve: [PlayerResolver],
   },
 ];
 

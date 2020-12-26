@@ -67,6 +67,9 @@ export class ProfileComponent extends StateComponent<{ editMode: boolean; loadin
   }
 
   async openModalSelectRegion(): Promise<void> {
+    if (!this.authQuery.getIsSameAsLogged(this.player)) {
+      return;
+    }
     const idRegionPlayer = this.player.region?.id ?? -1;
     this.updateState('loadingRegion', true);
     await this.regionService.showSelectModal(idRegionPlayer, idRegion =>

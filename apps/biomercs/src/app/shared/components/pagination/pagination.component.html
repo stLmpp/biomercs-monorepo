@@ -1,0 +1,43 @@
+<span> Items per page: </span>
+<bio-select [model]="itemsPerPage" (modelChange)="itemsPerPageChange.emit($event)" placeholder="Items per page">
+  <bio-option *ngFor="let option of itemsPerPageOptions" [value]="option">{{ option }}</bio-option>
+</bio-select>
+<span>
+  {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ currentPage * itemsPerPage | min: totalItems }} of {{ totalItems }}
+</span>
+<button
+  bioButton
+  icon
+  type="button"
+  (click)="firstPage.emit(1); currentPageChange.emit(1)"
+  [disabled]="currentPage === 1"
+>
+  <icon>first_page</icon>
+</button>
+<button
+  bioButton
+  icon
+  type="button"
+  (click)="previousPage.emit(currentPage - 1); currentPageChange.emit(currentPage - 1)"
+  [disabled]="currentPage === 1"
+>
+  <icon>chevron_left</icon>
+</button>
+<button
+  bioButton
+  icon
+  type="button"
+  (click)="nextPage.emit(currentPage + 1); currentPageChange.emit(currentPage + 1)"
+  [disabled]="currentPage === totalPages"
+>
+  <icon>chevron_right</icon>
+</button>
+<button
+  bioButton
+  icon
+  type="button"
+  (click)="lastPage.emit(totalPages); currentPageChange.emit(totalPages)"
+  [disabled]="currentPage === totalPages"
+>
+  <icon>last_page</icon>
+</button>
