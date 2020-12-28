@@ -2085,36 +2085,36 @@
   resolved "https://registry.yarnpkg.com/@sqltools/formatter/-/formatter-1.2.2.tgz#9390a8127c0dcba61ebd7fdcc748655e191bdd68"
   integrity sha512-/5O7Fq6Vnv8L6ucmPjaWbVG1XkP4FO+w5glqfkIsq3Xw4oyNAdJddbnYodNDAfjVUvo/rrSCTom4kAND7T1o5Q==
 
-"@stlmpp/control@~3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@stlmpp/control/-/control-3.0.2.tgz#edd9dcb4e69c079b5bc4d3c38d5f3b5a7f9c6320"
-  integrity sha512-bhR3nbrI2iPtn+qR4GdHwPD5k9yFQ4/QDScuWBHiZfLWhFvDooPD2CbYNRgJLiDtE5k4lPaQ3B80h1e9WQyCMw==
+"@stlmpp/control@~3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@stlmpp/control/-/control-3.0.3.tgz#9b437500e80a7c04b6bf2e3b35bc3f93ac880091"
+  integrity sha512-5Yn9G5vQFkWrfnSBIT/Kctmq24aY8Woy45nyiiRQGGncDkIz07DNhQvkbQ0Dg3h3vsIBcdoXGnmYmJAN9fyDZg==
   dependencies:
-    "@stlmpp/utils" "~3.2.2"
+    "@stlmpp/utils" "~3.2.3"
     date-fns "~2.16.1"
     tslib "~2.0.3"
 
-"@stlmpp/router@~3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@stlmpp/router/-/router-3.0.4.tgz#0a73b4d25b4567df24ef6e1a484adc7b78e5698f"
-  integrity sha512-9m1kBBodjxi0cPP4EGfYi/OvZdPQWXX0GLjvh0Dmj5aF3bMcTuWK2QdyQqRo5dc9BqzaWA/LZKz//5JqUcPSeQ==
+"@stlmpp/router@~3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@stlmpp/router/-/router-3.0.5.tgz#330fb73441efe06a3e73fe7578736dd290a85ea2"
+  integrity sha512-NT7Kvx7kSV0/kfgs7XNfEF/AkYxus4tJOH8TKYoOEKIDJ7ims0He9Nos3+0+raMhtI0f7F6mI8tjINWAGHx+lw==
   dependencies:
-    "@stlmpp/utils" "~3.2.2"
+    "@stlmpp/utils" "~3.2.3"
     tslib "~2.0.3"
 
-"@stlmpp/store@~4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@stlmpp/store/-/store-4.0.3.tgz#113c2c82db309c0cf113d1f037b3763d782c3a68"
-  integrity sha512-GwfuPCMCb6MZBD43ehEpdxD5dt5FBEscLmrcEkphsmrLhcJYGOffxWvMjPMGKaKyyXd3eVeTx0qm0eSZxbfZbA==
+"@stlmpp/store@~4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@stlmpp/store/-/store-4.0.4.tgz#b333d9b845ce5b37607cf40c914ab9929de26c65"
+  integrity sha512-mO7zcLzJtqvgXAbtpIcOPaG7psvaKvlMC2BhB3Bs06Cllcgvi7M61y5XaJaYubBWJqFUeUwwVsha0HI5rjhluQ==
   dependencies:
-    "@stlmpp/utils" "~3.2.2"
+    "@stlmpp/utils" "~3.2.3"
     copy-anything "~2.0.1"
     tslib "~2.0.3"
 
-"@stlmpp/utils@~3.2.2":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@stlmpp/utils/-/utils-3.2.2.tgz#ad1e2106bfc72e3808f7110dd68de6dc2bfb44f0"
-  integrity sha512-Y5pqGkNBHJzcD4JHqDupVXcff0ixAQvTVFBF5Gg2T6U6OeYDRYR4JAXlHw+lfsBiR8+0NgsdWLdjZEPIDk9BLg==
+"@stlmpp/utils@~3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@stlmpp/utils/-/utils-3.2.3.tgz#c878ddad0477560cc70182c8af5bf0935850aacf"
+  integrity sha512-LObOfBVcbvtKdZOOcY+AN0SCf1er5iRlsVkPSuNk/3+L4NmRTmYO2kaZkEIqptBJPssJaspXJaPxU6q9S7MSgQ==
   dependencies:
     fast-sort "~2.2.0"
     tslib "~2.0.3"

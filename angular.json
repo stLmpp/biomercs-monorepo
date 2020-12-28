@@ -25,11 +25,18 @@
             "polyfills": "apps/biomercs/src/polyfills.ts",
             "tsConfig": "apps/biomercs/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/biomercs/src/favicon.ico", "apps/biomercs/src/assets"],
-            "styles": ["apps/biomercs/src/styles.scss"],
+            "assets": [
+              "apps/biomercs/src/favicon.ico",
+              "apps/biomercs/src/assets"
+            ],
+            "styles": [
+              "apps/biomercs/src/styles.scss"
+            ],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": ["apps/biomercs/src/styles"]
+              "includePaths": [
+                "apps/biomercs/src/styles"
+              ]
             }
           },
           "configurations": {
@@ -110,12 +117,17 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/biomercs/src/**/*.ts", "apps/biomercs/src/**/*.html"]
+            "lintFilePatterns": [
+              "apps/biomercs/src/**/*.ts",
+              "apps/biomercs/src/**/*.html"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/biomercs"],
+          "outputs": [
+            "coverage/apps/biomercs"
+          ],
           "options": {
             "jestConfig": "apps/biomercs/jest.config.js",
             "passWithNoTests": true
@@ -144,7 +156,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/biomercs-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/biomercs-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
@@ -157,12 +171,16 @@
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/api",
             "main": "apps/api/src/main.ts",
             "tsConfig": "apps/api/tsconfig.app.json",
-            "assets": ["apps/api/src/assets"],
+            "assets": [
+              "apps/api/src/assets"
+            ],
             "showCircularDependencies": false,
             "webpackConfig": "apps/api/webpack.config.js"
           },
@@ -189,12 +207,16 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/api/**/*.ts"]
+            "lintFilePatterns": [
+              "apps/api/**/*.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/api"],
+          "outputs": [
+            "coverage/apps/api"
+          ],
           "options": {
             "jestConfig": "apps/api/jest.config.js",
             "passWithNoTests": true
@@ -210,7 +232,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api-interfaces/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/api-interfaces/**/*.ts"
+            ]
           }
         }
       }
@@ -223,12 +247,16 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api-validation/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/api-validation/**/*.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/api-validation"],
+          "outputs": [
+            "coverage/libs/api-validation"
+          ],
           "options": {
             "jestConfig": "libs/api-validation/jest.config.js",
             "passWithNoTests": true
@@ -244,12 +272,16 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api-dto/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/api-dto/**/*.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/api-dto"],
+          "outputs": [
+            "coverage/libs/api-dto"
+          ],
           "options": {
             "jestConfig": "libs/api-dto/jest.config.js",
             "passWithNoTests": true
@@ -260,7 +292,8 @@
   },
   "cli": {
     "defaultCollection": "@nrwl/angular",
-    "packageManager": "yarn"
+    "packageManager": "yarn",
+    "analytics": "de7edcd6-f111-434c-8af3-d70c4e3a9272"
   },
   "schematics": {
     "@nrwl/angular": {

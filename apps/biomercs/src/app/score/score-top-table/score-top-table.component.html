@@ -16,7 +16,7 @@
           <div></div>
           <div class="player" (click)="updateOrderByPlayer()">
             Player
-            <icon class="order-icon" *ngIf="order.orderByType === 'player'" small>
+            <icon class="order-icon" *ngIf="order.orderByType === 'personaName'" small>
               {{ arrow }}
             </icon>
           </div>
@@ -37,7 +37,7 @@
 
       <hr />
       <div class="body">
-        <ng-container *ngFor="let player of scores.scoreTables; trackBy: trackByPlayer; let $index = index">
+        <ng-container *ngFor="let player of scores.scoreTables; trackBy: trackByPlayer">
           <div>
             <div class="pos-{{ player.position }}">{{ player.position }}</div>
             <div class="player">

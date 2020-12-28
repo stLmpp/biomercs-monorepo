@@ -26,7 +26,7 @@ export class ScoreTopTableComponent
     tableLoading: boolean;
     orderBy?: number;
     orderByDirection?: OrderByDirection;
-    orderByType?: 'stage' | 'total' | 'player';
+    orderByType?: 'stage' | 'total' | 'personaName';
   }>
   implements OnInit {
   constructor(
@@ -97,29 +97,20 @@ export class ScoreTopTableComponent
           if (!idStage) {
             return scoreTable;
           }
-          const findScore = (value: ScoreTableVW): number =>
-            value.scores.find(score => score?.idStage === idStage)?.score ?? 0;
-          const compare: (valueA: ScoreTableVW, valueB: ScoreTableVW) => number =
-            orderByDiretion === 'asc'
-              ? (valueA, valueB) => findScore(valueA) - findScore(valueB)
-              : (valueA, valueB) => findScore(valueB) - findScore(valueA);
           return {
             ...scoreTable,
-            scoreTables: [...scoreTable.scoreTables].sort((valueA, valueB) => compare(valueA, valueB)),
+            scoreTables: orderBy(
+              scoreTable.scoreTables,
+              table => table.scores.find(score => score?.idStage === idStage)?.score ?? 0,
+              orderByDiretion
+            ),
           };
         }
-        case 'player': {
+        default:
           return {
             ...scoreTable,
-            scoreTables: orderBy(scoreTable.scoreTables, 'personaName', orderByDiretion),
+            scoreTables: orderBy(scoreTable.scoreTables, orderByType, orderByDiretion),
           };
-        }
-        default: {
-          return {
-            ...scoreTable,
-            scoreTables: orderBy(scoreTable.scoreTables, 'total', orderByDiretion),
-          };
-        }
       }
     })
   );
@@ -161,10 +152,10 @@ export class ScoreTopTableComponent
   }
 
   updateOrderByPlayer(): void {
-    if (this.getState('orderByType') === 'player') {
+    if (this.getState('orderByType') === 'personaName') {
       this.updateState('orderByDirection', this.getState('orderByDirection') === 'asc' ? 'desc' : 'asc');
     } else {
-      this.updateState({ orderByType: 'player', orderBy: undefined });
+      this.updateState({ orderByType: 'personaName', orderBy: undefined });
     }
   }
 
