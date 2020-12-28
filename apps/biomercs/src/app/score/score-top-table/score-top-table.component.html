@@ -3,7 +3,7 @@
   <card-content>
     <bio-params
       [params]="form.value$ | async"
-      (paramsChange)="form.patchValue($event)"
+      (paramsChange)="paramsChange($event)"
       setQueryParamsOnChange
     ></bio-params>
   </card-content>

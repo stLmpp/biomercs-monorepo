@@ -20,7 +20,15 @@ import { debounceTime, distinctUntilChanged, finalize, map, skip, switchMap, tak
 import { combineLatest } from 'rxjs';
 import { StageService } from '../services/stage/stage.service';
 import { trackByFactory } from '@stlmpp/utils';
-import { Character, CharacterCostume, Game, MiniGame, Mode, Platform, Stage } from '@biomercs/api-interfaces';
+import {
+  Character,
+  CharacterCostume,
+  Game,
+  MiniGame,
+  Mode,
+  Platform,
+  Stage,
+} from '@biomercs/api-interfaces';
 import { StateComponent } from '../components/common/state-component';
 import { CharacterService } from '../services/character/character.service';
 import { distinctUntilChangedObject } from '../../util/operators/distinct-until-changed-object';

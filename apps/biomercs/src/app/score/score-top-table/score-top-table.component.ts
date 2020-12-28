@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TrackByFunction } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TrackByFunction } from '@angular/core';
 import { ParamsForm } from '../../shared/params/params.component';
 import { Control, ControlBuilder } from '@stlmpp/control';
 import { ScoreService } from '../score.service';
@@ -21,12 +21,14 @@ interface TopTableForm extends ParamsForm {
   styleUrls: ['./score-top-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScoreTopTableComponent extends StateComponent<{
-  tableLoading: boolean;
-  orderBy?: number;
-  orderByDirection?: OrderByDirection;
-  orderByType?: 'stage' | 'total' | 'player';
-}> {
+export class ScoreTopTableComponent
+  extends StateComponent<{
+    tableLoading: boolean;
+    orderBy?: number;
+    orderByDirection?: OrderByDirection;
+    orderByType?: 'stage' | 'total' | 'player';
+  }>
+  implements OnInit {
   constructor(
     private controlBuilder: ControlBuilder,
     private scoreService: ScoreService,
@@ -59,8 +61,8 @@ export class ScoreTopTableComponent extends StateComponent<{
 
   scoreTopTable$ = this.form.value$.pipe(
     debounceTime(100),
-    filter(params => !!params.idPlatform && !!params.idGame && !!params.idMiniGame && !!params.idMode),
     distinctUntilChangedObject(),
+    filter(params => !!params.idPlatform && !!params.idGame && !!params.idMiniGame && !!params.idMode),
     switchMap(params => {
       this.updateState('tableLoading', true);
       return this.scoreService
@@ -173,4 +175,10 @@ export class ScoreTopTableComponent extends StateComponent<{
   changePage($event: number): void {
     this.pageControl.setValue($event);
   }
+
+  paramsChange($event: ParamsForm): void {
+    this.form.patchValue({ ...$event, page: 1 });
+  }
+
+  ngOnInit(): void {}
 }

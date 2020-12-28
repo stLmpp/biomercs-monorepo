@@ -185,8 +185,10 @@ export class SelectComponent extends Select implements ControlValue, AfterConten
   }
 
   setControlValue(value: any): void {
-    this.onChange$.next(value);
-    this.value = value;
+    if (!this.compareWith(value, this.value)) {
+      this.onChange$.next(value);
+      this.value = value;
+    }
     this.close();
   }
 
