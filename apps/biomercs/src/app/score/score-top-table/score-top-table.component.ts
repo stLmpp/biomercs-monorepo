@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, TrackByFunction } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TrackByFunction } from '@angular/core';
 import { ParamsForm } from '../../shared/params/params.component';
 import { Control, ControlBuilder } from '@stlmpp/control';
 import { ScoreService } from '../score.service';
@@ -21,14 +21,12 @@ interface TopTableForm extends ParamsForm {
   styleUrls: ['./score-top-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScoreTopTableComponent
-  extends StateComponent<{
-    tableLoading: boolean;
-    orderBy?: number;
-    orderByDirection?: OrderByDirection;
-    orderByType?: 'stage' | 'total' | 'personaName';
-  }>
-  implements OnInit {
+export class ScoreTopTableComponent extends StateComponent<{
+  tableLoading: boolean;
+  orderBy?: number;
+  orderByDirection?: OrderByDirection;
+  orderByType?: 'stage' | 'total' | 'personaName';
+}> {
   constructor(
     private controlBuilder: ControlBuilder,
     private scoreService: ScoreService,
@@ -37,6 +35,10 @@ export class ScoreTopTableComponent
     super({ tableLoading: false, orderByDirection: 'desc', orderByType: 'total' });
   }
 
+  private _firstParamsChange = true;
+
+  itemsPerPageOptions = [5, 10, 25, 50, 100];
+
   form = this.controlBuilder.group<TopTableForm>({
     idPlatform: this._getParamOrNull(RouteParam.idPlatform),
     idGame: this._getParamOrNull(RouteParam.idGame),
@@ -44,7 +46,7 @@ export class ScoreTopTableComponent
     idMode: this._getParamOrNull(RouteParam.idMode),
     idStage: this._getParamOrNull(RouteParam.idStage),
     idCharacterCostume: this._getParamOrNull(RouteParam.idCharacterCostume),
-    itemsPerPage: +(this.activatedRoute.snapshot.queryParamMap.get(RouteParam.itemsPerPage) ?? 10),
+    itemsPerPage: this._getItemsPerPageFromRoute(),
     page: +(this.activatedRoute.snapshot.queryParamMap.get(RouteParam.page) ?? 1),
   });
 
@@ -133,6 +135,11 @@ export class ScoreTopTableComponent
       : null;
   }
 
+  private _getItemsPerPageFromRoute(): number {
+    const itemsPerPage = +(this.activatedRoute.snapshot.queryParamMap.get(RouteParam.itemsPerPage) ?? 10);
+    return this.itemsPerPageOptions.includes(itemsPerPage) ? itemsPerPage : 10;
+  }
+
   trackByScore: TrackByFunction<ScoreVW | undefined> = (index, item) => (item ? item.idScore : index);
 
   updateOrderByStage(idStage?: number): void {
@@ -168,8 +175,11 @@ export class ScoreTopTableComponent
   }
 
   paramsChange($event: ParamsForm): void {
-    this.form.patchValue({ ...$event, page: 1 });
+    if (this._firstParamsChange) {
+      this.form.patchValue($event);
+      this._firstParamsChange = false;
+    } else {
+      this.form.patchValue({ ...$event, page: 1 });
+    }
   }
-
-  ngOnInit(): void {}
 }

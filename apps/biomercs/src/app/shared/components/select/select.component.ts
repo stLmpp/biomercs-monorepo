@@ -22,13 +22,14 @@ import { OptionComponent } from './option.component';
 import { isNil } from '@stlmpp/utils';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { cdkOverlayTransparentBackdrop, overlayPositions } from '../../../util/overlay';
+import { cdkOverlayTransparentBackdrop } from '../../../util/overlay';
 import { auditTime, startWith, takeUntil } from 'rxjs/operators';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { Animations } from '../../animations/animations';
 import { AnimationEvent } from '@angular/animations';
 import { Key } from 'ts-key-enum';
 import { OptgroupComponent } from './optgroup.component';
+import { getOverlayPositionMenu } from '../menu/menu-trigger.directive';
 
 @Component({
   selector: 'bio-select',
@@ -145,15 +146,7 @@ export class SelectComponent extends Select implements ControlValue, AfterConten
   open(): void {
     this._overlayRef = this.overlay.create({
       scrollStrategy: this.overlay.scrollStrategies.block(),
-      positionStrategy: this.overlay
-        .position()
-        .flexibleConnectedTo(this.elementRef.nativeElement)
-        .withPositions([
-          { ...overlayPositions.bottom, offsetY: 2, overlayX: 'start', originX: 'start' },
-          { ...overlayPositions.bottom, offsetY: 2, overlayX: 'end', originX: 'end' },
-          { ...overlayPositions.top, offsetY: -2, overlayX: 'start', originX: 'start' },
-          { ...overlayPositions.top, offsetY: -2, overlayX: 'end', originX: 'end' },
-        ]),
+      positionStrategy: getOverlayPositionMenu(this.overlay, this.elementRef),
       backdropClass: cdkOverlayTransparentBackdrop,
       minWidth: 200,
       minHeight: 32,

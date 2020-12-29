@@ -61,6 +61,7 @@
       [meta]="paginationMeta"
       (currentPageChange)="changePage($event)"
       (itemsPerPageChange)="changeItemsPerPage($event)"
+      [itemsPerPageOptions]="itemsPerPageOptions"
       setQueryParamsOnChange
     ></pagination>
   </card-actions>

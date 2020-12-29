@@ -5,15 +5,15 @@
 <span>
   {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ currentPage * itemsPerPage | min: totalItems }} of {{ totalItems }}
 </span>
-<button bioButton icon type="button" (click)="onFirstPage()" [disabled]="currentPage === 1">
+<button bioButton icon type="button" (click)="onFirstPage()" [disabled]="currentPage === 1" tooltip="First page">
   <icon>first_page</icon>
 </button>
-<button bioButton icon type="button" (click)="onPreviousPage()" [disabled]="currentPage === 1">
+<button bioButton icon type="button" (click)="onPreviousPage()" [disabled]="currentPage === 1" tooltip="Previous page">
   <icon>chevron_left</icon>
 </button>
-<button bioButton icon type="button" (click)="onNextPage()" [disabled]="currentPage === totalPages">
+<button bioButton icon type="button" (click)="onNextPage()" [disabled]="currentPage === totalPages" tooltip="Next page">
   <icon>chevron_right</icon>
 </button>
-<button bioButton icon type="button" (click)="onLastPage()" [disabled]="currentPage === totalPages">
+<button bioButton icon type="button" (click)="onLastPage()" [disabled]="currentPage === totalPages" tooltip="Last page">
   <icon>last_page</icon>
 </button>

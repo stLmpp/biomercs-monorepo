@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { PaginationMetaVW, RouteParam } from '@biomercs/api-interfaces';
 import { Router } from '@angular/router';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -8,6 +8,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
   templateUrl: './pagination.component.html',
   styleUrls: ['./pagination.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'pagination' },
 })
 export class PaginationComponent implements OnChanges, PaginationMetaVW {
   constructor(private router: Router) {}
@@ -47,10 +48,12 @@ export class PaginationComponent implements OnChanges, PaginationMetaVW {
     if (!this._setQueryParamsOnChange) {
       return;
     }
-    this.router.navigate([], {
-      queryParams: { [RouteParam.page]: this.currentPage, [RouteParam.itemsPerPage]: this.itemsPerPage },
-      queryParamsHandling: 'merge',
-    });
+    this.router
+      .navigate([], {
+        queryParams: { [RouteParam.page]: this.currentPage, [RouteParam.itemsPerPage]: this.itemsPerPage },
+        queryParamsHandling: 'merge',
+      })
+      .then();
   }
 
   onNextPage(): void {

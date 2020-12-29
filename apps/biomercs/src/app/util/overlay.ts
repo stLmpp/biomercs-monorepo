@@ -1,4 +1,5 @@
 import { ConnectedPosition } from '@angular/cdk/overlay';
+import { rotateArray } from './util';
 
 export interface OverlayPositions {
   top: ConnectedPosition;
@@ -7,7 +8,7 @@ export interface OverlayPositions {
   left: ConnectedPosition;
 }
 
-export const overlayPositions: OverlayPositions = {
+export const overlayPositions = (): OverlayPositions => ({
   top: {
     originX: 'center',
     originY: 'top',
@@ -32,6 +33,24 @@ export const overlayPositions: OverlayPositions = {
     overlayX: 'end',
     overlayY: 'center',
   },
+});
+
+export const overlayPositionsArray = (from: keyof OverlayPositions = 'top'): ConnectedPosition[] => {
+  const { top, right, left, bottom } = overlayPositions();
+  const array = [top, right, bottom, left];
+  let rotations = 0;
+  switch (from) {
+    case 'right':
+      rotations = 1;
+      break;
+    case 'bottom':
+      rotations = 2;
+      break;
+    case 'left':
+      rotations = 3;
+      break;
+  }
+  return rotations ? rotateArray([top, right, bottom, left], rotations) : array;
 };
 
 export const cdkOverlayTransparentBackdrop = 'cdk-overlay-transparent-backdrop';

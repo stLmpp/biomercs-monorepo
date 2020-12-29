@@ -1,11 +1,23 @@
 import { Directive, ElementRef, HostListener, Inject, Input, ViewContainerRef } from '@angular/core';
 import { MenuComponent } from './menu.component';
-import { Overlay } from '@angular/cdk/overlay';
+import { Overlay, PositionStrategy } from '@angular/cdk/overlay';
 import { cdkOverlayTransparentBackdrop, overlayPositions } from '../../../util/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Destroyable } from '../common/destroyable-component';
 import { takeUntil } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
+
+export function getOverlayPositionMenu(overlay: Overlay, elementRef: ElementRef): PositionStrategy {
+  return overlay
+    .position()
+    .flexibleConnectedTo(elementRef.nativeElement)
+    .withPositions([
+      { ...overlayPositions().bottom, offsetY: 2, overlayX: 'start', originX: 'start' },
+      { ...overlayPositions().bottom, offsetY: 2, overlayX: 'end', originX: 'end' },
+      { ...overlayPositions().top, offsetY: -2, overlayX: 'start', originX: 'start' },
+      { ...overlayPositions().top, offsetY: -2, overlayX: 'end', originX: 'end' },
+    ]);
+}
 
 @Directive({
   selector: '[menuTrigger]',
@@ -39,15 +51,7 @@ export class MenuTriggerDirective extends Destroyable {
       scrollStrategy: this._isClick()
         ? this.overlay.scrollStrategies.block()
         : this.overlay.scrollStrategies.close({ threshold: 5 }),
-      positionStrategy: this.overlay
-        .position()
-        .flexibleConnectedTo(this.elementRef.nativeElement)
-        .withPositions([
-          { ...overlayPositions.bottom, offsetY: 2, overlayX: 'start', originX: 'start' },
-          { ...overlayPositions.bottom, offsetY: 2, overlayX: 'end', originX: 'end' },
-          { ...overlayPositions.top, offsetY: -2, overlayX: 'start', originX: 'start' },
-          { ...overlayPositions.top, offsetY: -2, overlayX: 'end', originX: 'end' },
-        ]),
+      positionStrategy: getOverlayPositionMenu(this.overlay, this.elementRef),
       hasBackdrop: this._isClick(),
       backdropClass: cdkOverlayTransparentBackdrop,
     });
