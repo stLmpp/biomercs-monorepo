@@ -140,11 +140,15 @@ export class ScoreTopTableComponent extends StateComponent<{
     return this.itemsPerPageOptions.includes(itemsPerPage) ? itemsPerPage : 10;
   }
 
+  private _updateOrderDirection(): void {
+    this.updateState('orderByDirection', this.getState('orderByDirection') === 'asc' ? 'desc' : 'asc');
+  }
+
   trackByScore: TrackByFunction<ScoreVW | undefined> = (index, item) => (item ? item.idScore : index);
 
   updateOrderByStage(idStage?: number): void {
     if (idStage && idStage === this.getState('orderBy')) {
-      this.updateState('orderByDirection', this.getState('orderByDirection') === 'asc' ? 'desc' : 'asc');
+      this._updateOrderDirection();
     } else {
       this.updateState({ orderByType: 'stage', orderBy: idStage });
     }
@@ -152,7 +156,7 @@ export class ScoreTopTableComponent extends StateComponent<{
 
   updateOrderByTotal(): void {
     if (this.getState('orderByType') === 'total') {
-      this.updateState('orderByDirection', this.getState('orderByDirection') === 'asc' ? 'desc' : 'asc');
+      this._updateOrderDirection();
     } else {
       this.updateState({ orderByType: 'total', orderBy: undefined });
     }
@@ -160,7 +164,7 @@ export class ScoreTopTableComponent extends StateComponent<{
 
   updateOrderByPlayer(): void {
     if (this.getState('orderByType') === 'personaName') {
-      this.updateState('orderByDirection', this.getState('orderByDirection') === 'asc' ? 'desc' : 'asc');
+      this._updateOrderDirection();
     } else {
       this.updateState({ orderByType: 'personaName', orderBy: undefined });
     }
