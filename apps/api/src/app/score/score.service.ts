@@ -13,8 +13,13 @@ import { ScorePlayerEntity } from './score-player/score-player.entity';
 import { PlayerService } from '../player/player.service';
 import { PlatformGameMiniGameModeCharacterCostumeService } from '../platform/platform-game-mini-game-mode-character-costume/platform-game-mini-game-mode-character-costume.service';
 import { ScoreTableViewModel, ScoreTopTableViewModel } from './view-model/score-table.view-model';
-import { ScoreStatusEnum } from '@biomercs/api-interfaces';
+import { ScoreStatusEnum, User } from '@biomercs/api-interfaces';
 import { StageEntity } from '../stage/stage.entity';
+import { ScoreApprovalViewModel } from './view-model/score-approval.view-model';
+import { ScoreApprovalParams } from './score.params';
+import { ScoreApprovalAddDto } from './score-approval/score-approval.dto';
+import { ScoreApprovalService } from './score-approval/score-approval.service';
+import { ScoreApprovalActionEnum } from './score-approval/score-approval-action.enum';
 
 @Injectable()
 export class ScoreService {
@@ -25,7 +30,8 @@ export class ScoreService {
     private scorePlayerService: ScorePlayerService,
     private mapperService: MapperService,
     private playerService: PlayerService,
-    private platformGameMiniGameModeCharacterCostumeService: PlatformGameMiniGameModeCharacterCostumeService
+    private platformGameMiniGameModeCharacterCostumeService: PlatformGameMiniGameModeCharacterCostumeService,
+    private scoreApprovalService: ScoreApprovalService
   ) {}
 
   @Transactional()
@@ -58,6 +64,41 @@ export class ScoreService {
     );
     await this.scorePlayerService.addMany(score.id, idPlatform, idGame, idMiniGame, idMode, scorePlayers);
     return this.findByIdMapped(score.id);
+  }
+
+  @Transactional()
+  async approvalAdmin(
+    idScore: number,
+    dto: ScoreApprovalAddDto,
+    user: User,
+    action: ScoreApprovalActionEnum
+  ): Promise<void> {
+    const score = await this.scoreRepository.findOneOrFail(idScore);
+    if (![ScoreStatusEnum.AwaitingApprovalAdmin, ScoreStatusEnum.RejectedByAdmin].includes(score.status)) {
+      throw new BadRequestException(`Score is not awaiting for Admin approval`);
+    }
+    await this.scoreApprovalService.addAdmin({ ...dto, idUser: user.id, action, actionDate: new Date() });
+    await this.scoreRepository.update(idScore, {
+      status: action === ScoreApprovalActionEnum.Approve ? ScoreStatusEnum.Approved : ScoreStatusEnum.RejectedByAdmin,
+    });
+  }
+
+  @Transactional()
+  async approvalPlayer(
+    idScore: number,
+    dto: ScoreApprovalAddDto,
+    user: User,
+    action: ScoreApprovalActionEnum
+  ): Promise<void> {
+    const idPlayer = await this.playerService.findIdByIdUser(user.id);
+    const score = await this.scoreRepository.findOneOrFail(idScore);
+    if (![ScoreStatusEnum.AwaitingApprovalPlayer, ScoreStatusEnum.RejectedByPlayer].includes(score.status)) {
+      throw new BadRequestException(`Score is not awaiting for Admin approval`);
+    }
+    await this.scoreApprovalService.addPlayer({ ...dto, idPlayer, action, actionDate: new Date() });
+    await this.scoreRepository.update(idScore, {
+      status: action === ScoreApprovalActionEnum.Approve ? ScoreStatusEnum.Approved : ScoreStatusEnum.RejectedByPlayer,
+    });
   }
 
   async findByIdMapped(idScore: number): Promise<ScoreViewModel> {
@@ -158,5 +199,22 @@ export class ScoreService {
       stages: platformGameMiniGameModeStages.reduce((acc, item) => [...acc, item.stage], [] as StageEntity[]),
       meta,
     };
+  }
+
+  async findApprovalListAdmin(params: ScoreApprovalParams): Promise<ScoreApprovalViewModel> {
+    const { items, meta } = await this.scoreRepository.findApprovalListAdmin(params);
+    const scoreApprovalVW = new ScoreApprovalViewModel();
+    scoreApprovalVW.meta = meta;
+    scoreApprovalVW.scores = this.mapperService.map(ScoreEntity, ScoreViewModel, items);
+    return scoreApprovalVW;
+  }
+
+  async findApprovalListUser(user: User, params: ScoreApprovalParams): Promise<ScoreApprovalViewModel> {
+    const idPlayer = await this.playerService.findIdByIdUser(user.id);
+    const { items, meta } = await this.scoreRepository.findApprovalListUser(idPlayer, params);
+    const scoreApprovalVW = new ScoreApprovalViewModel();
+    scoreApprovalVW.meta = meta;
+    scoreApprovalVW.scores = this.mapperService.map(ScoreEntity, ScoreViewModel, items);
+    return scoreApprovalVW;
   }
 }

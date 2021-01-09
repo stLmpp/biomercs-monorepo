@@ -41,7 +41,7 @@ import { MapperModule } from './mapper/mapper.module';
         from: `"Biomercs" <${environment.get('MAIL')}>`,
       },
       template: {
-        dir: join(__dirname, '..', '..', 'mail', 'templates'),
+        dir: join(__dirname, '..', '..', '..', 'mail', 'templates'),
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,

@@ -26,4 +26,5 @@ export interface ScoreVW {
   dateAchieved?: Date;
   status: ScoreStatusEnum;
   scorePlayers: ScorePlayerVW[];
+  creationDate: Date;
 }

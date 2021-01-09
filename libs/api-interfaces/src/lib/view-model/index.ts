@@ -5,3 +5,4 @@ export * from './auth-register';
 export * from './auth-steam-login-socket';
 export * from './score-top-table';
 export * from './pagination';
+export * from './score-approval';
