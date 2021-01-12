@@ -14,4 +14,8 @@ export class ScoreApprovalService {
   async addPlayer({ idPlayer, ...dto }: ScoreApprovalAddPlayerDto): Promise<ScoreApprovalEntity> {
     return this.scoreApprovalRepository.save(new ScoreApprovalEntity().extendDto({ ...dto, actionByPlayer: idPlayer }));
   }
+
+  async findCountByIdScoreWithoutCreator(idScore: number): Promise<number> {
+    return this.scoreApprovalRepository.findCountByIdScoreWithoutCreator(idScore);
+  }
 }

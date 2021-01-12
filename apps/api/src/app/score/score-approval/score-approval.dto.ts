@@ -26,6 +26,10 @@ export class ScoreApprovalAddAdminDto extends ScoreApprovalAddDto {
   @IsDefined()
   @IsDate()
   actionDate!: Date;
+
+  @IsNumber()
+  @IsDefined()
+  idScore!: number;
 }
 
 export class ScoreApprovalAddPlayerDto extends ScoreApprovalAddDto {
@@ -40,4 +44,8 @@ export class ScoreApprovalAddPlayerDto extends ScoreApprovalAddDto {
   @IsDefined()
   @IsDate()
   actionDate!: Date;
+
+  @IsNumber()
+  @IsDefined()
+  idScore!: number;
 }

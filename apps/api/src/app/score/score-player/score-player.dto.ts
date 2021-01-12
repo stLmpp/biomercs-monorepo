@@ -3,6 +3,10 @@ import { IsNumber } from '@biomercs/api-validation';
 import { ScorePlayerAdd } from '@biomercs/api-dto';
 
 export class ScorePlayerAddDto implements ScorePlayerAdd {
+  constructor(partial?: Partial<ScorePlayerAddDto>) {
+    Object.assign(this, partial);
+  }
+
   @IsDefined()
   @IsNumber()
   idPlayer!: number;

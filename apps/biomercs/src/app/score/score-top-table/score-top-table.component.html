@@ -4,6 +4,7 @@
     <bio-params
       [params]="form.value$ | async"
       (paramsChange)="paramsChange($event)"
+      [config]="paramsConfig"
       setQueryParamsOnChange
     ></bio-params>
   </card-content>

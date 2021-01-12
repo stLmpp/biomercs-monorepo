@@ -199,7 +199,7 @@ export class AuthService {
     if (rememberMe) {
       options.expiresIn = '180 days';
     }
-    return await this.jwtService.signAsync({ id, password }, options);
+    return this.jwtService.signAsync({ id, password }, options);
   }
 
   async validateSteamToken(steamid: string, token: string): Promise<boolean> {

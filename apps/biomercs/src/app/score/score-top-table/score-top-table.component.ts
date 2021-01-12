@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, TrackByFunction } from '@angular/core';
-import { ParamsForm } from '../../shared/params/params.component';
+import { ParamsConfig, ParamsForm } from '../../shared/params/params.component';
 import { Control, ControlBuilder } from '@stlmpp/control';
 import { ScoreService } from '../score.service';
 import { debounceTime, filter, finalize, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -36,6 +36,11 @@ export class ScoreTopTableComponent extends StateComponent<{
   }
 
   private _firstParamsChange = true;
+
+  paramsConfig: Partial<ParamsConfig> = {
+    idStage: { show: false },
+    idCharacterCostume: { show: false },
+  };
 
   itemsPerPageOptions = [5, 10, 25, 50, 100];
 

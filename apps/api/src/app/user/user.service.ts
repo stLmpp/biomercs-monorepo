@@ -9,6 +9,17 @@ import { AuthCredentialsDto } from '../auth/auth.dto';
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
+  private _getWhereEmailOrUsername(username?: string, email?: string): FindConditions<UserEntity>[] {
+    const where: FindConditions<UserEntity>[] = [];
+    if (username) {
+      where.push({ username });
+    }
+    if (email) {
+      where.push({ email });
+    }
+    return where;
+  }
+
   async add(dto: UserAddDto): Promise<UserEntity> {
     return this.userRepository.save(new UserEntity().extendDto(dto));
   }
@@ -45,13 +56,7 @@ export class UserService {
     if (!username && !email) {
       throw new BadRequestException('Needs at least one parameter');
     }
-    const where: FindConditions<UserEntity>[] = [];
-    if (username) {
-      where.push({ username });
-    }
-    if (email) {
-      where.push({ email });
-    }
+    const where = this._getWhereEmailOrUsername(username, email);
     return this.userRepository.findOne({ where });
   }
 
@@ -59,13 +64,7 @@ export class UserService {
     if (!username && !email) {
       throw new BadRequestException('Needs at least one parameter');
     }
-    const where: FindConditions<UserEntity>[] = [];
-    if (username) {
-      where.push({ username });
-    }
-    if (email) {
-      where.push({ email });
-    }
+    const where = this._getWhereEmailOrUsername(username, email);
     return this.userRepository.exists(where);
   }
 

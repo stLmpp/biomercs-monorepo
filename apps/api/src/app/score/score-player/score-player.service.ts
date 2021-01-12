@@ -41,4 +41,8 @@ export class ScorePlayerService {
   async addManyRandom(scorePlayers: ScorePlayerEntity[]): Promise<ScorePlayerEntity[]> {
     return this.scorePlayerRepository.save(scorePlayers);
   }
+
+  async findCountByIdScoreWithtoutCreator(idScore: number): Promise<number> {
+    return this.scorePlayerRepository.findCountByIdScoreWithtoutCreator(idScore);
+  }
 }

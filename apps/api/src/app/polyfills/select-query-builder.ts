@@ -61,11 +61,11 @@ SelectQueryBuilder.prototype.fillAndWhere = function (alias, dto) {
 
 SelectQueryBuilder.prototype.paginateRaw = async function (page, limit) {
   const [query, parameters] = this.clone().getQueryAndParameters();
-  const total = await this.connection
-    .query(`SELECT COUNT(1) AS Q FROM (${query}) AS COUNTED`, parameters)
-    .then(raw => raw[0].Q);
   const offset = (page - 1) * limit;
-  const items = await this.limit(limit).offset(offset).getRawMany();
+  const [total, items] = await Promise.all([
+    this.connection.query(`SELECT COUNT(1) AS Q FROM (${query}) AS COUNTED`, parameters).then(raw => raw[0].Q),
+    this.limit(limit).offset(offset).getRawMany(),
+  ]);
   return {
     items,
     meta: {

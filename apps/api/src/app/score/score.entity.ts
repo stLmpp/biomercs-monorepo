@@ -3,6 +3,7 @@ import { BaseEntity } from '../shared/super/base-entity';
 import { PlatformGameMiniGameModeStageEntity } from '../platform/platform-game-mini-game-mode-stage/platform-game-mini-game-mode-stage.entity';
 import { ScorePlayerEntity } from './score-player/score-player.entity';
 import { ScoreStatusEnum } from '@biomercs/api-interfaces';
+import { PlayerEntity } from '../player/player.entity';
 
 @Entity()
 export class ScoreEntity extends BaseEntity {
@@ -30,4 +31,11 @@ export class ScoreEntity extends BaseEntity {
 
   @OneToMany(() => ScorePlayerEntity, scorePlayer => scorePlayer.score)
   scorePlayers!: ScorePlayerEntity[];
+
+  @Column()
+  createdByIdPlayer!: number;
+
+  @ManyToOne(() => PlayerEntity)
+  @JoinColumn({ name: 'createdByIdPlayer' })
+  createdByPlayer!: PlayerEntity;
 }

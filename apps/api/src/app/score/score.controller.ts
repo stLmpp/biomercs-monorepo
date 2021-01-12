@@ -21,8 +21,8 @@ export class ScoreController {
   constructor(private scoreService: ScoreService) {}
 
   @Post()
-  async add(@Body() dto: ScoreAddDto): Promise<ScoreViewModel> {
-    return this.scoreService.add(dto);
+  async add(@Body() dto: ScoreAddDto, @AuthUser() user: User): Promise<ScoreViewModel> {
+    return this.scoreService.add(dto, user);
   }
 
   @ApiQuery({ name: 'platform', required: false })

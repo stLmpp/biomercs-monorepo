@@ -20,6 +20,7 @@ import { ScoreApprovalParams } from './score.params';
 import { ScoreApprovalAddDto } from './score-approval/score-approval.dto';
 import { ScoreApprovalService } from './score-approval/score-approval.service';
 import { ScoreApprovalActionEnum } from './score-approval/score-approval-action.enum';
+import { ScorePlayerAddDto } from './score-player/score-player.dto';
 
 @Injectable()
 export class ScoreService {
@@ -35,16 +36,14 @@ export class ScoreService {
   ) {}
 
   @Transactional()
-  async add({
-    idPlatform,
-    idGame,
-    idMiniGame,
-    idMode,
-    idStage,
-    scorePlayers,
-    ...dto
-  }: ScoreAddDto): Promise<ScoreViewModel> {
-    const mode = await this.modeService.findById(idMode);
+  async add(
+    { idPlatform, idGame, idMiniGame, idMode, idStage, scorePlayers, ...dto }: ScoreAddDto,
+    user: User
+  ): Promise<ScoreViewModel> {
+    const [mode, createdByIdPlayer] = await Promise.all([
+      this.modeService.findById(idMode),
+      this.playerService.findIdByIdUser(user.id),
+    ]);
     if (mode.playerQuantity !== scorePlayers.length) {
       throw new BadRequestException(
         `This mode requires ${mode.playerQuantity} player(s), but we received ${scorePlayers.length}`
@@ -60,8 +59,15 @@ export class ScoreService {
     const status =
       mode.playerQuantity > 1 ? ScoreStatusEnum.AwaitingApprovalPlayer : ScoreStatusEnum.AwaitingApprovalAdmin;
     const score = await this.scoreRepository.save(
-      new ScoreEntity().extendDto({ ...dto, idPlatformGameMiniGameModeStage, status })
+      new ScoreEntity().extendDto({ ...dto, idPlatformGameMiniGameModeStage, status, createdByIdPlayer })
     );
+    if (scorePlayers.every(scorePlayer => !scorePlayer.host)) {
+      const hostPlayer =
+        scorePlayers.find(scorePlayer => scorePlayer.idPlayer === createdByIdPlayer) ?? scorePlayers[0];
+      scorePlayers = scorePlayers.map(
+        scorePlayer => new ScorePlayerAddDto({ ...scorePlayer, host: hostPlayer.idPlayer === scorePlayer.idPlayer })
+      );
+    }
     await this.scorePlayerService.addMany(score.id, idPlatform, idGame, idMiniGame, idMode, scorePlayers);
     return this.findByIdMapped(score.id);
   }
@@ -77,10 +83,12 @@ export class ScoreService {
     if (![ScoreStatusEnum.AwaitingApprovalAdmin, ScoreStatusEnum.RejectedByAdmin].includes(score.status)) {
       throw new BadRequestException(`Score is not awaiting for Admin approval`);
     }
-    await this.scoreApprovalService.addAdmin({ ...dto, idUser: user.id, action, actionDate: new Date() });
-    await this.scoreRepository.update(idScore, {
-      status: action === ScoreApprovalActionEnum.Approve ? ScoreStatusEnum.Approved : ScoreStatusEnum.RejectedByAdmin,
-    });
+    await Promise.all([
+      this.scoreApprovalService.addAdmin({ ...dto, idUser: user.id, action, actionDate: new Date(), idScore }),
+      this.scoreRepository.update(idScore, {
+        status: action === ScoreApprovalActionEnum.Approve ? ScoreStatusEnum.Approved : ScoreStatusEnum.RejectedByAdmin,
+      }),
+    ]);
   }
 
   @Transactional()
@@ -93,12 +101,21 @@ export class ScoreService {
     const idPlayer = await this.playerService.findIdByIdUser(user.id);
     const score = await this.scoreRepository.findOneOrFail(idScore);
     if (![ScoreStatusEnum.AwaitingApprovalPlayer, ScoreStatusEnum.RejectedByPlayer].includes(score.status)) {
-      throw new BadRequestException(`Score is not awaiting for Admin approval`);
+      throw new BadRequestException(`Score is not awaiting for Player approval`);
     }
-    await this.scoreApprovalService.addPlayer({ ...dto, idPlayer, action, actionDate: new Date() });
-    await this.scoreRepository.update(idScore, {
-      status: action === ScoreApprovalActionEnum.Approve ? ScoreStatusEnum.Approved : ScoreStatusEnum.RejectedByPlayer,
-    });
+    await this.scoreApprovalService.addPlayer({ ...dto, idPlayer, action, actionDate: new Date(), idScore });
+    const [countPlayers, countApprovals] = await Promise.all([
+      this.scorePlayerService.findCountByIdScoreWithtoutCreator(idScore),
+      this.scoreApprovalService.findCountByIdScoreWithoutCreator(idScore),
+    ]);
+    if (countPlayers === countApprovals || action === ScoreApprovalActionEnum.Reject) {
+      await this.scoreRepository.update(idScore, {
+        status:
+          action === ScoreApprovalActionEnum.Approve
+            ? ScoreStatusEnum.AwaitingApprovalAdmin
+            : ScoreStatusEnum.RejectedByPlayer,
+      });
+    }
   }
 
   async findByIdMapped(idScore: number): Promise<ScoreViewModel> {
@@ -164,20 +181,10 @@ export class ScoreService {
     page: number,
     limit: number
   ): Promise<ScoreTopTableViewModel> {
-    const platformGameMiniGameModeStages = await this.platformGameMiniGameModeStageService.findByPlatformGameMiniGameMode(
-      idPlatform,
-      idGame,
-      idMiniGame,
-      idMode
-    );
-    const [scoreMap, meta] = await this.scoreRepository.findScoreTable(
-      idPlatform,
-      idGame,
-      idMiniGame,
-      idMode,
-      page,
-      limit
-    );
+    const [platformGameMiniGameModeStages, [scoreMap, meta]] = await Promise.all([
+      this.platformGameMiniGameModeStageService.findByPlatformGameMiniGameMode(idPlatform, idGame, idMiniGame, idMode),
+      this.scoreRepository.findScoreTable(idPlatform, idGame, idMiniGame, idMode, page, limit),
+    ]);
     const scoreTableViewModel: ScoreTableViewModel[] = [];
     let position = (page - 1) * limit + 1;
     for (const [idPlayer, scores] of scoreMap) {

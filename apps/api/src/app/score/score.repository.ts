@@ -123,6 +123,7 @@ export class ScoreRepository extends Repository<ScoreEntity> {
       .from(
         subQuery =>
           this._createQueryBuilderScore(idPlatform, idGame, idMiniGame, idMode, subQuery.from(ScoreEntity, 's'))
+            .andWhere('s.status = :status', { status: ScoreStatusEnum.Approved })
             .addSelect('sp.idPlayer', 'idPlayer')
             .addSelect('max(s.score)', 'maxScore')
             .addGroupBy('pgmms.id')
@@ -188,7 +189,7 @@ export class ScoreRepository extends Repository<ScoreEntity> {
   ): Promise<Pagination<ScoreEntity>> {
     return this._createQueryBuilderRelations(idPlatform, idGame, idMiniGame, idMode)
       .andWhere('score.status = :status', { status: ScoreStatusEnum.AwaitingApprovalPlayer })
-      .andWhere('(score.createdBy != :createdBy && sp.idPlayer = :idPlayer)', { createdBy: idPlayer, idPlayer })
+      .andWhere('(score.createdByIdPlayer != :createdBy && sp.idPlayer = :idPlayer)', { createdBy: idPlayer, idPlayer })
       .andNotExists(sb =>
         sb
           .from(ScoreApprovalEntity, 'sa')
